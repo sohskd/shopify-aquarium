@@ -1,7 +1,9 @@
-import { Controller, Get, Render, Param } from '@nestjs/common';
+import { Controller, Get, Post, Render, Param, Body } from '@nestjs/common';
+import { ShopifyService } from './shopify.service';
 
 @Controller()
 export class AppController {
+  constructor(private readonly shopifyService: ShopifyService) {}
   private products = [
     {
       id: 1,
@@ -58,5 +60,11 @@ export class AppController {
   getCart() {
     // Cart is fully managed on the client via localStorage
     return {};
+  }
+
+  @Post('api/checkout')
+  async createCheckout(@Body() body: { items: any[] }) {
+    const checkoutUrl = await this.shopifyService.createCheckout(body.items);
+    return { checkoutUrl };
   }
 }

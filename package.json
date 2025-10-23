@@ -24,6 +24,7 @@
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.1.7",
     "@nestjs/serve-static": "^5.0.4",
+    "@shopify/shopify-api": "^12.1.0",
     "@types/express-handlebars": "^6.0.2",
     "@types/handlebars": "^4.1.0",
     "express-handlebars": "^8.0.3",

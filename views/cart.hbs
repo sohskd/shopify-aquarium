@@ -120,8 +120,31 @@
         renderCart();
       };
 
-      document.getElementById('checkoutBtn').onclick = () => {
-        alert('Checkout would redirect to Shopify checkout (to be implemented).');
+      document.getElementById('checkoutBtn').onclick = async () => {
+        const items = loadCart();
+        if (!items.length) {
+          alert('Your cart is empty');
+          return;
+        }
+        
+        try {
+          const response = await fetch('/api/checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items })
+          });
+          
+          const data = await response.json();
+          
+          if (data.checkoutUrl) {
+            window.location.href = data.checkoutUrl;
+          } else {
+            alert('Unable to create checkout. Please try again.');
+          }
+        } catch (error) {
+          console.error('Checkout error:', error);
+          alert('Unable to create checkout. Please try again.');
+        }
       };
       updateCartCount();
     }
