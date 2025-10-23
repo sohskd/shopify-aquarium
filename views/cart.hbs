@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart - Aquatic Avenue</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <nav class="bg-white border-b border-gray-200">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between py-4">
+        <div class="flex-1"></div>
+        <div class="text-center">
+          <a href="/"><h1 class="text-2xl font-light tracking-widest">AQUATIC AVENUE</h1>
+          <p class="text-xs text-gray-500 tracking-wide">THE AQUARIUM SPECIALIST</p></a>
+        </div>
+        <div class="flex-1 flex justify-end items-center space-x-4">
+          <a href="/cart" class="relative p-2 hover:bg-gray-100 rounded-full">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            <span id="cartCount" class="absolute -top-1 -right-1 bg-gray-900 text-white text-[10px] rounded-full px-1.5 py-0.5">0</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <section class="py-12">
+    <div class="container mx-auto px-4 max-w-5xl">
+      <h1 class="text-3xl font-light text-gray-900 mb-8">Your Cart</h1>
+
+      <div id="cartEmpty" class="hidden text-gray-600">Your cart is empty.</div>
+      <div id="cartItems" class="space-y-4"></div>
+
+      <div id="cartSummary" class="mt-8 bg-white rounded-lg p-6 shadow-sm hidden">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-gray-700">Subtotal</span>
+          <span id="subtotal" class="text-lg font-semibold text-gray-900">$0.00 SGD</span>
+        </div>
+        <button id="checkoutBtn" class="w-full bg-gray-900 text-white py-3 rounded-full hover:bg-gray-800">Checkout (Placeholder)</button>
+        <p class="text-xs text-gray-500 mt-2 text-center">Later, this can redirect to a Shopify checkout session.</p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const CART_KEY = 'aa_cart';
+
+    function loadCart() {
+      try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch { return []; }
+    }
+    function saveCart(items) {
+      localStorage.setItem(CART_KEY, JSON.stringify(items));
+      updateCartCount();
+    }
+    function formatPrice(n) {
+      return `$${n.toFixed(2)} SGD`;
+    }
+    function updateCartCount() {
+      const items = loadCart();
+      const count = items.reduce((a, i) => a + i.quantity, 0);
+      const el = document.getElementById('cartCount');
+      if (el) el.textContent = String(count);
+    }
+
+    function renderCart() {
+      const items = loadCart();
+      const empty = document.getElementById('cartEmpty');
+      const list = document.getElementById('cartItems');
+      const summary = document.getElementById('cartSummary');
+
+      list.innerHTML = '';
+      if (!items.length) {
+        empty.classList.remove('hidden');
+        summary.classList.add('hidden');
+        updateCartCount();
+        return;
+      }
+      empty.classList.add('hidden');
+      summary.classList.remove('hidden');
+
+      let subtotal = 0;
+      items.forEach((item, idx) => {
+        subtotal += item.price * item.quantity;
+        const row = document.createElement('div');
+        row.className = 'bg-white rounded-lg p-4 shadow-sm flex items-center gap-4';
+        row.innerHTML = `
+          <img src="/images/${item.image}" class="w-20 h-20 object-cover rounded" alt="${item.name}">
+          <div class="flex-1">
+            <p class="text-sm text-gray-900">${item.name}</p>
+            <p class="text-sm text-gray-600">${formatPrice(item.price)}</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button data-action="dec" data-index="${idx}" class="px-2 py-1 border rounded">-</button>
+            <span class="w-8 text-center" id="qty-${idx}">${item.quantity}</span>
+            <button data-action="inc" data-index="${idx}" class="px-2 py-1 border rounded">+</button>
+          </div>
+          <button data-action="remove" data-index="${idx}" class="text-red-600 hover:underline ml-4">Remove</button>
+        `;
+        list.appendChild(row);
+      });
+      document.getElementById('subtotal').textContent = formatPrice(subtotal);
+
+      list.onclick = (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        const idx = parseInt(btn.getAttribute('data-index'));
+        const action = btn.getAttribute('data-action');
+        const items = loadCart();
+        if (action === 'inc') items[idx].quantity++;
+        if (action === 'dec') items[idx].quantity = Math.max(1, items[idx].quantity - 1);
+        if (action === 'remove') items.splice(idx, 1);
+        saveCart(items);
+        renderCart();
+      };
+
+      document.getElementById('checkoutBtn').onclick = () => {
+        alert('Checkout would redirect to Shopify checkout (to be implemented).');
+      };
+      updateCartCount();
+    }
+
+    // Init
+    renderCart();
+  </script>
+</body>
+</html>
