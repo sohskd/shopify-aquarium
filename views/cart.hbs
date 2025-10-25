@@ -90,8 +90,9 @@
         subtotal += item.price * item.quantity;
         const row = document.createElement('div');
         row.className = 'bg-white rounded-lg p-4 shadow-sm flex items-center gap-4';
+        const imageSrc = item.image && item.image.startsWith('http') ? item.image : `/images/${item.image}`;
         row.innerHTML = `
-          <img src="/images/${item.image}" class="w-20 h-20 object-cover rounded" alt="${item.name}">
+          <img src="${imageSrc}" class="w-20 h-20 object-cover rounded" alt="${item.name}">
           <div class="flex-1">
             <p class="text-sm text-gray-900">${item.name}</p>
             <p class="text-sm text-gray-600">${formatPrice(item.price)}</p>
@@ -120,31 +121,8 @@
         renderCart();
       };
 
-      document.getElementById('checkoutBtn').onclick = async () => {
-        const items = loadCart();
-        if (!items.length) {
-          alert('Your cart is empty');
-          return;
-        }
-        
-        try {
-          const response = await fetch('/api/checkout', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ items })
-          });
-          
-          const data = await response.json();
-          
-          if (data.checkoutUrl) {
-            window.location.href = data.checkoutUrl;
-          } else {
-            alert('Unable to create checkout. Please try again.');
-          }
-        } catch (error) {
-          console.error('Checkout error:', error);
-          alert('Unable to create checkout. Please try again.');
-        }
+      document.getElementById('checkoutBtn').onclick = () => {
+        alert('Checkout would redirect to Shopify checkout (to be implemented).');
       };
       updateCartCount();
     }

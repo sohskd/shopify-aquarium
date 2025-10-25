@@ -267,49 +267,25 @@
             <h2 class="text-3xl md:text-4xl font-light text-gray-800 mb-12">Shop Best Sellers</h2>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <!-- Product 1 -->
-                <a href="/product/1" class="bg-white rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 block">
+                {{#each bestSellers}}
+                <a href="/product/{{this.id}}" class="bg-white rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 block">
                     <div class="aspect-square bg-gray-200 flex items-center justify-center overflow-hidden">
-                        <img src="/images/product1.jpg" alt="Oriental TC - Micranthemum 'Monte Carlo'" class="w-full h-full object-cover">
+                        {{#if this.image}}
+                            {{#if (startsWith this.image "http")}}
+                                <img src="{{this.image}}" alt="{{this.name}}" class="w-full h-full object-cover">
+                            {{else}}
+                                <img src="/images/{{this.image}}" alt="{{this.name}}" class="w-full h-full object-cover">
+                            {{/if}}
+                        {{else}}
+                            <span class="text-gray-400">No Image</span>
+                        {{/if}}
                     </div>
                     <div class="p-4">
-                        <h3 class="text-sm text-gray-700 mb-2">Oriental TC - Micranthemum 'Monte Carlo'</h3>
-                        <p class="text-base font-semibold text-gray-900">$10.00 SGD</p>
+                        <h3 class="text-sm text-gray-700 mb-2">{{this.name}}</h3>
+                        <p class="text-base font-semibold text-gray-900">{{this.price}}</p>
                     </div>
                 </a>
-
-                <!-- Product 2 -->
-                <a href="/product/2" class="bg-white rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 block">
-                    <div class="aspect-square bg-gray-200 flex items-center justify-center overflow-hidden">
-                        <img src="/images/product2.jpg" alt="Oriental TC - Eleocharis acicularis 'Mini'" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-4">
-                        <h3 class="text-sm text-gray-700 mb-2">Oriental TC - Eleocharis acicularis 'Mini'</h3>
-                        <p class="text-base font-semibold text-gray-900">$10.00 SGD</p>
-                    </div>
-                </a>
-
-                <!-- Product 3 -->
-                <a href="/product/3" class="bg-white rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 block">
-                    <div class="aspect-square bg-gray-200 flex items-center justify-center overflow-hidden">
-                        <img src="/images/product3.jpg" alt="Oriental TC - Staurogyne repens" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-4">
-                        <h3 class="text-sm text-gray-700 mb-2">Oriental TC - Staurogyne repens</h3>
-                        <p class="text-base font-semibold text-gray-900">$10.00 SGD</p>
-                    </div>
-                </a>
-
-                <!-- Product 4 -->
-                <a href="/product/4" class="bg-white rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 block">
-                    <div class="aspect-square bg-gray-200 flex items-center justify-center overflow-hidden">
-                        <img src="/images/product4.jpg" alt="Oriental TC - Bucephalandra Brownie Ghost" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-4">
-                        <h3 class="text-sm text-gray-700 mb-2">Oriental TC - Bucephalandra Brownie Ghost</h3>
-                        <p class="text-base font-semibold text-gray-900">$10.00 SGD</p>
-                    </div>
-                </a>
+                {{/each}}
             </div>
 
             <!-- View All Button -->
@@ -344,33 +320,6 @@
         </div>
     </section>
 
-    <!-- Best Sellers -->
-    <section class="py-16 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12">Shop Best Sellers</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {{#each bestSellers}}
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                    <div class="h-48 bg-gray-200 flex items-center justify-center">
-                        <span class="text-gray-400">Product Image</span>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-semibold text-lg mb-2">{{this.name}}</h3>
-                        <p class="text-blue-600 font-bold">{{this.price}}</p>
-                        <button class="mt-4 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors">
-                            Add to Cart
-                        </button>
-                    </div>
-                </div>
-                {{/each}}
-            </div>
-            <div class="text-center mt-10">
-                <a href="/shop" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-700 transition-colors">
-                    View All Products
-                </a>
-            </div>
-        </div>
-    </section>
 
     <!-- CTA Section -->
     <section class="py-20 bg-gradient-to-r from-teal-600 to-blue-500 text-white">

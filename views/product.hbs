@@ -82,7 +82,17 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </button>
-                        <img src="/images/{{product.image}}" alt="{{product.name}}" class="w-full h-auto rounded-lg">
+                        {{#if product.image}}
+                            {{#if (startsWith product.image "http")}}
+                                <img src="{{product.image}}" alt="{{product.name}}" class="w-full h-auto rounded-lg">
+                            {{else}}
+                                <img src="/images/{{product.image}}" alt="{{product.name}}" class="w-full h-auto rounded-lg">
+                            {{/if}}
+                        {{else}}
+                            <div class="w-full h-96 bg-gray-200 rounded-lg flex items-center justify-center">
+                                <span class="text-gray-400">No Image</span>
+                            </div>
+                        {{/if}}
                     </div>
                 </div>
 
@@ -266,12 +276,14 @@
             if (existing) {
                 existing.quantity += qty;
             } else {
+                const productImage = '{{product.image}}';
                 items.push({
                     id,
                     name: `{{product.name}}`,
                     price: numericPrice,
-                    image: `{{product.image}}`,
-                    quantity: qty
+                    image: productImage,
+                    quantity: qty,
+                    shopifyVariantId: `{{product.shopifyVariantId}}`
                 });
             }
             saveCart(items);
@@ -287,7 +299,8 @@
             const modalName = document.getElementById('modalProductName');
             const modalCount = document.getElementById('modalCartCount');
             
-            modalImage.src = '/images/{{product.image}}';
+            const productImage = '{{product.image}}';
+            modalImage.src = productImage.startsWith('http') ? productImage : '/images/' + productImage;
             modalImage.alt = '{{product.name}}';
             modalName.textContent = '{{product.name}}';
             

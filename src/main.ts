@@ -12,7 +12,12 @@ async function bootstrap() {
     extname: '.hbs',
     defaultLayout: 'main',
     layoutsDir: join(__dirname, '..', 'views/layouts'),
-    partialsDir: join(__dirname, '..', 'views/partials')
+    partialsDir: join(__dirname, '..', 'views/partials'),
+    helpers: {
+      startsWith: function(str: string, prefix: string) {
+        return str && str.startsWith(prefix);
+      }
+    }
   });
   
   app.engine('hbs', hbs.engine);
