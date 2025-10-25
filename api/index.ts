@@ -53,7 +53,16 @@ async function bootstrap() {
 }
 
 export default async (req: any, res: any) => {
-  const app = await bootstrap();
-  const expressApp = app.getHttpAdapter().getInstance();
-  return expressApp(req, res);
+  try {
+    const app = await bootstrap();
+    const expressApp = app.getHttpAdapter().getInstance();
+    return expressApp(req, res);
+  } catch (error) {
+    console.error('[Vercel] Error handling request:', error);
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
+  }
 };
