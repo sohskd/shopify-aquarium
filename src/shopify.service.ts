@@ -161,28 +161,51 @@ export class ShopifyService {
     }
 
     // Filter only items that have a mapped Shopify variant id
-    const lineItems = (cartItems || [])
+    const lines = (cartItems || [])
       .filter((i) => !!i.shopifyVariantId && i.quantity > 0)
       .map((i) => ({
-        variantId: `gid://shopify/ProductVariant/${i.shopifyVariantId}`,
+        merchandiseId: `gid://shopify/ProductVariant/${i.shopifyVariantId}`,
         quantity: i.quantity,
       }));
 
-    if (!lineItems.length) {
+    if (!lines.length) {
       console.warn('[Shopify] No items with shopifyVariantId found in cart.');
       return '/cart';
     }
 
+    // Use the newer cartCreate mutation (checkoutCreate is deprecated)
     const query = `
-      mutation checkoutCreate($input: CheckoutCreateInput!) {
-        checkoutCreate(input: $input) {
-          checkout { id webUrl }
-          checkoutUserErrors { code field message }
+      mutation cartCreate($input: CartInput!) {
+        cartCreate(input: $input) {
+          cart {
+            id
+            checkoutUrl
+          }
+          userErrors {
+            field
+            message
+          }
         }
       }
     `;
 
-    const variables = { input: { lineItems } };
+    // Get the base URL from environment or use localhost for development
+    const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+    
+    const variables = { 
+      input: { 
+        lines: lines,
+        buyerIdentity: {
+          countryCode: 'SG'
+        },
+        attributes: [
+          {
+            key: '_return_url',
+            value: `${baseUrl}/payment/success`
+          }
+        ]
+      } 
+    };
 
     try {
       const res = await fetch(`https://${this.shopDomain}/api/2024-01/graphql.json`, {
@@ -195,10 +218,20 @@ export class ShopifyService {
       });
 
       const json = await res.json();
-      const webUrl = json?.data?.checkoutCreate?.checkout?.webUrl;
-      if (webUrl) return webUrl;
+      
+      // Check for errors
+      if (json?.data?.cartCreate?.userErrors?.length > 0) {
+        console.error('[Shopify] cartCreate userErrors:', json.data.cartCreate.userErrors);
+        return '/cart';
+      }
+      
+      const checkoutUrl = json?.data?.cartCreate?.cart?.checkoutUrl;
+      if (checkoutUrl) {
+        console.log('[Shopify] Cart created successfully, redirecting to:', checkoutUrl);
+        return checkoutUrl;
+      }
 
-      console.error('[Shopify] checkoutCreate error:', json?.data?.checkoutCreate?.checkoutUserErrors || json);
+      console.error('[Shopify] cartCreate error:', json?.errors || json);
       return '/cart';
     } catch (err) {
       console.error('[Shopify] Network/API error:', err);

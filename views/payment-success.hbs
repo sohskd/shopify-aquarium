@@ -104,5 +104,17 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Clear cart after successful payment
+        const CART_KEY = 'aa_cart';
+        localStorage.removeItem(CART_KEY);
+        console.log('[Success] Cart cleared after successful payment');
+        
+        // Update cart count in case user navigates back
+        if (window.opener) {
+            window.opener.postMessage({ type: 'CART_CLEARED' }, '*');
+        }
+    </script>
 </body>
 </html>
