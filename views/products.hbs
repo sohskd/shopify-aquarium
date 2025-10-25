@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+        }
+        .product-card {
+            transition: all 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(6, 182, 212, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-cyan-50 to-white">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between py-5">
+                <a href="/" class="text-2xl font-semibold tracking-wider bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
+                    AQUATIC AVENUE
+                </a>
+                <div class="flex items-center space-x-4">
+                    <a href="/cart" class="p-2.5 hover:bg-cyan-50 rounded-full transition-colors relative">
+                        <svg class="w-6 h-6 text-cyan-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <span id="cartCount" class="absolute -top-1 -right-1 bg-cyan-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="py-16 bg-gradient-to-r from-cyan-600 to-blue-600 text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Our Aquatic Collection</h1>
+            <p class="text-xl text-cyan-50 max-w-2xl mx-auto">
+                Discover premium aquatic plants, equipment, and accessories for your underwater paradise. 
+                Each product is carefully selected to ensure the health and beauty of your aquarium.
+            </p>
+        </div>
+    </section>
+
+    <!-- Filters & Sorting -->
+    <section class="py-8 bg-white border-b border-gray-200 sticky top-[73px] z-40">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <!-- Product Count -->
+                <div class="text-gray-700">
+                    <span class="font-semibold text-lg">{{totalProducts}}</span> 
+                    <span class="text-gray-600">products found</span>
+                </div>
+
+                <!-- Filters & Sort -->
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <!-- Category Filter -->
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                        <select id="categoryFilter" class="w-full sm:w-48 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent bg-white">
+                            <option value="all" {{#if (eq category 'all')}}selected{{/if}}>All Products</option>
+                            <option value="plant" {{#if (eq category 'plant')}}selected{{/if}}>Plants</option>
+                            <option value="equipment" {{#if (eq category 'equipment')}}selected{{/if}}>Equipment</option>
+                            <option value="fish" {{#if (eq category 'fish')}}selected{{/if}}>Fish</option>
+                            <option value="decoration" {{#if (eq category 'decoration')}}selected{{/if}}>Decorations</option>
+                        </select>
+                    </div>
+
+                    <!-- Sort By -->
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
+                        <select id="sortFilter" class="w-full sm:w-48 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent bg-white">
+                            <option value="default" {{#if (eq sort 'default')}}selected{{/if}}>Featured</option>
+                            <option value="name-asc" {{#if (eq sort 'name-asc')}}selected{{/if}}>Name: A-Z</option>
+                            <option value="name-desc" {{#if (eq sort 'name-desc')}}selected{{/if}}>Name: Z-A</option>
+                            <option value="price-asc" {{#if (eq sort 'price-asc')}}selected{{/if}}>Price: Low to High</option>
+                            <option value="price-desc" {{#if (eq sort 'price-desc')}}selected{{/if}}>Price: High to Low</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Grid -->
+    <section class="py-12">
+        <div class="container mx-auto px-4">
+            {{#if products.length}}
+                <!-- Grid: 4 columns on desktop, 2 on tablet, 1 on mobile -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    {{#each products}}
+                        <div class="product-card bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer" onclick="window.location.href='/product/{{this.id}}'">
+                            <!-- Product Image -->
+                            <div class="relative h-64 bg-gradient-to-br from-cyan-100 to-blue-100 overflow-hidden">
+                                <img src="{{this.image}}" alt="{{this.name}}" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500" onerror="this.src='/images/image1.jpg'">
+                                {{#unless this.availableForSale}}
+                                    <div class="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                                        Out of Stock
+                                    </div>
+                                {{/unless}}
+                            </div>
+
+                            <!-- Product Info -->
+                            <div class="p-5">
+                                <h3 class="font-semibold text-lg text-gray-800 mb-2 line-clamp-2 hover:text-cyan-600 transition-colors">
+                                    {{this.name}}
+                                </h3>
+                                
+                                {{#if this.description}}
+                                    <p class="text-sm text-gray-600 mb-3 line-clamp-2">
+                                        {{this.description}}
+                                    </p>
+                                {{/if}}
+
+                                <!-- Price & Button -->
+                                <div class="flex items-center justify-between mt-4">
+                                    <span class="text-2xl font-bold text-cyan-600">
+                                        {{this.price}}
+                                    </span>
+                                    {{#if this.availableForSale}}
+                                        <button class="bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300">
+                                            View Details
+                                        </button>
+                                    {{else}}
+                                        <button class="bg-gray-300 text-gray-600 px-4 py-2 rounded-full text-sm font-semibold cursor-not-allowed" disabled>
+                                            Unavailable
+                                        </button>
+                                    {{/if}}
+                                </div>
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
+
+                <!-- Pagination -->
+                {{#if (gt totalPages 1)}}
+                    <div class="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <!-- Page Info -->
+                        <div class="text-gray-600">
+                            Page <span class="font-semibold">{{currentPage}}</span> of <span class="font-semibold">{{totalPages}}</span>
+                        </div>
+
+                        <!-- Pagination Buttons -->
+                        <div class="flex items-center gap-2">
+                            <!-- Previous Button -->
+                            {{#if hasPrevPage}}
+                                <a href="/products?page={{subtract currentPage 1}}&sort={{sort}}&category={{category}}" 
+                                   class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-cyan-50 hover:border-cyan-500 transition-colors">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </a>
+                            {{else}}
+                                <span class="px-4 py-2 border border-gray-200 rounded-lg text-gray-400 cursor-not-allowed">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </span>
+                            {{/if}}
+
+                            <!-- Page Numbers -->
+                            {{#each (range 1 totalPages)}}
+                                {{#if (eq this ../currentPage)}}
+                                    <span class="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg font-semibold">
+                                        {{this}}
+                                    </span>
+                                {{else}}
+                                    <a href="/products?page={{this}}&sort={{../sort}}&category={{../category}}" 
+                                       class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-cyan-50 hover:border-cyan-500 transition-colors">
+                                        {{this}}
+                                    </a>
+                                {{/if}}
+                            {{/each}}
+
+                            <!-- Next Button -->
+                            {{#if hasNextPage}}
+                                <a href="/products?page={{add currentPage 1}}&sort={{sort}}&category={{category}}" 
+                                   class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-cyan-50 hover:border-cyan-500 transition-colors">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </a>
+                            {{else}}
+                                <span class="px-4 py-2 border border-gray-200 rounded-lg text-gray-400 cursor-not-allowed">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </span>
+                            {{/if}}
+                        </div>
+                    </div>
+                {{/if}}
+            {{else}}
+                <!-- No Products Found -->
+                <div class="text-center py-20">
+                    <svg class="w-24 h-24 mx-auto text-gray-300 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                    </svg>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">No Products Found</h3>
+                    <p class="text-gray-600 mb-6">Try adjusting your filters or search criteria</p>
+                    <a href="/products" class="inline-block bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-8 py-3 rounded-full font-semibold hover:shadow-xl hover:scale-105 transition-all duration-300">
+                        View All Products
+                    </a>
+                </div>
+            {{/if}}
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-20">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Aquatic Avenue</h3>
+                    <p class="text-gray-400">Singapore's premier aquarium specialist for all your aquatic needs.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="/" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="/products" class="text-gray-400 hover:text-white">Shop</a></li>
+                        <li><a href="/cart" class="text-gray-400 hover:text-white">Cart</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Contact</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li>123 Aqua Street</li>
+                        <li>Singapore 123456</li>
+                        <li>+65 6123 4567</li>
+                        <li>hello@aquaticavenue.com</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Follow Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white">FB</a>
+                        <a href="#" class="text-gray-400 hover:text-white">IG</a>
+                        <a href="#" class="text-gray-400 hover:text-white">YT</a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 Aquatic Avenue. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Cart management
+        const CART_KEY = 'aa_cart';
+        
+        function loadCart() {
+            try {
+                return JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+            } catch {
+                return [];
+            }
+        }
+        
+        function updateCartCount() {
+            const items = loadCart();
+            const count = items.reduce((a, i) => a + i.quantity, 0);
+            const el = document.getElementById('cartCount');
+            if (el) el.textContent = String(count);
+        }
+        
+        // Filter and sort handling
+        const categoryFilter = document.getElementById('categoryFilter');
+        const sortFilter = document.getElementById('sortFilter');
+        
+        function updateFilters() {
+            const category = categoryFilter.value;
+            const sort = sortFilter.value;
+            const currentPage = new URLSearchParams(window.location.search).get('page') || '1';
+            window.location.href = `/products?page=1&sort=${sort}&category=${category}`;
+        }
+        
+        categoryFilter.addEventListener('change', updateFilters);
+        sortFilter.addEventListener('change', updateFilters);
+        
+        // Initialize
+        updateCartCount();
+    </script>
+
+    <!-- Handlebars Helpers -->
+    <script>
+        // These are handled server-side, but included for reference
+        // eq, gt, subtract, add, range helpers
+    </script>
+</body>
+</html>
