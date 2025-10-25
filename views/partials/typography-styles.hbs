@@ -1,0 +1,234 @@
+<!-- Global Typography Styles - Modern eCommerce -->
+<style>
+    /* ===== FONT IMPORTS ===== */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
+    /* ===== ROOT VARIABLES ===== */
+    :root {
+        /* Font Families */
+        --font-heading: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+        --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        
+        /* Fluid Font Sizes - Responsive scaling */
+        --text-hero: clamp(2.5rem, 5vw + 1rem, 4rem);        /* 40px - 64px */
+        --text-h1: clamp(2rem, 4vw + 0.5rem, 3rem);          /* 32px - 48px */
+        --text-h2: clamp(1.75rem, 3vw + 0.5rem, 2.5rem);     /* 28px - 40px */
+        --text-h3: clamp(1.5rem, 2.5vw + 0.5rem, 2rem);      /* 24px - 32px */
+        --text-h4: clamp(1.25rem, 2vw + 0.25rem, 1.5rem);    /* 20px - 24px */
+        --text-product: clamp(1rem, 1.5vw + 0.25rem, 1.25rem); /* 16px - 20px */
+        --text-body: clamp(1rem, 1vw + 0.25rem, 1.125rem);   /* 16px - 18px */
+        --text-small: clamp(0.875rem, 0.75vw + 0.25rem, 1rem); /* 14px - 16px */
+        --text-caption: 0.875rem;                             /* 14px */
+        
+        /* Line Heights */
+        --lh-tight: 1.1;
+        --lh-snug: 1.2;
+        --lh-normal: 1.5;
+        --lh-relaxed: 1.6;
+        --lh-loose: 1.8;
+        
+        /* Letter Spacing */
+        --ls-tight: -0.02em;
+        --ls-normal: 0;
+        --ls-wide: 0.025em;
+        --ls-wider: 0.05em;
+    }
+
+    /* ===== BASE STYLES ===== */
+    * {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+    }
+
+    html {
+        font-size: 16px;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: var(--font-body);
+        font-size: var(--text-body);
+        font-weight: 400;
+        line-height: var(--lh-relaxed);
+        color: #1f2937;
+        letter-spacing: var(--ls-normal);
+    }
+
+    /* ===== HEADINGS ===== */
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-heading);
+        font-weight: 600;
+        line-height: var(--lh-snug);
+        letter-spacing: var(--ls-tight);
+        margin-bottom: 0.5em;
+        color: #111827;
+    }
+
+    h1 {
+        font-size: var(--text-h1);
+        font-weight: 700;
+        line-height: var(--lh-tight);
+    }
+
+    h2 {
+        font-size: var(--text-h2);
+        font-weight: 600;
+    }
+
+    h3 {
+        font-size: var(--text-h3);
+        font-weight: 600;
+    }
+
+    h4 {
+        font-size: var(--text-h4);
+        font-weight: 500;
+    }
+
+    /* ===== HERO HEADING ===== */
+    .hero-heading {
+        font-family: var(--font-heading);
+        font-size: var(--text-hero);
+        font-weight: 700;
+        line-height: var(--lh-tight);
+        letter-spacing: var(--ls-tight);
+    }
+
+    /* ===== SECTION HEADING ===== */
+    .section-heading {
+        font-family: var(--font-heading);
+        font-size: var(--text-h2);
+        font-weight: 600;
+        line-height: var(--lh-snug);
+        letter-spacing: var(--ls-tight);
+    }
+
+    /* ===== PRODUCT TITLE ===== */
+    .product-title {
+        font-family: var(--font-heading);
+        font-size: var(--text-product);
+        font-weight: 500;
+        line-height: var(--lh-normal);
+        letter-spacing: var(--ls-normal);
+    }
+
+    /* ===== BODY TEXT ===== */
+    p, .body-text {
+        font-family: var(--font-body);
+        font-size: var(--text-body);
+        font-weight: 400;
+        line-height: var(--lh-relaxed);
+        margin-bottom: 1em;
+    }
+
+    /* ===== SMALL TEXT & CAPTIONS ===== */
+    small, .caption, .text-caption {
+        font-family: var(--font-body);
+        font-size: var(--text-caption);
+        font-weight: 300;
+        line-height: var(--lh-normal);
+    }
+
+    .text-small {
+        font-family: var(--font-body);
+        font-size: var(--text-small);
+        font-weight: 400;
+        line-height: var(--lh-normal);
+    }
+
+    /* ===== BUTTONS & CTAs ===== */
+    button, .btn {
+        font-family: var(--font-body);
+        font-size: var(--text-body);
+        font-weight: 600;
+        letter-spacing: var(--ls-wide);
+    }
+
+    /* ===== NAVIGATION ===== */
+    nav a, .nav-link {
+        font-family: var(--font-body);
+        font-size: var(--text-small);
+        font-weight: 500;
+        letter-spacing: var(--ls-wide);
+    }
+
+    /* ===== PRICE TEXT ===== */
+    .price {
+        font-family: var(--font-heading);
+        font-weight: 600;
+        letter-spacing: var(--ls-normal);
+    }
+
+    /* ===== RESPONSIVE ADJUSTMENTS ===== */
+    
+    /* Tablets (768px - 1024px) */
+    @media (min-width: 768px) and (max-width: 1024px) {
+        html {
+            font-size: 15px;
+        }
+    }
+
+    /* Mobile Landscape (568px - 767px) */
+    @media (min-width: 568px) and (max-width: 767px) {
+        html {
+            font-size: 14px;
+        }
+        
+        body {
+            line-height: var(--lh-loose);
+        }
+    }
+
+    /* Mobile Portrait (< 568px) */
+    @media (max-width: 567px) {
+        html {
+            font-size: 14px;
+        }
+        
+        body {
+            line-height: var(--lh-loose);
+        }
+        
+        h1, h2, h3 {
+            line-height: var(--lh-snug);
+        }
+    }
+
+    /* High DPI Displays (Retina) */
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        body {
+            -webkit-font-smoothing: subpixel-antialiased;
+        }
+    }
+
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        body {
+            color: #f3f4f6;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            color: #ffffff;
+        }
+    }
+
+    /* ===== UTILITY CLASSES ===== */
+    .font-heading { font-family: var(--font-heading); }
+    .font-body { font-family: var(--font-body); }
+    
+    .fw-light { font-weight: 300; }
+    .fw-normal { font-weight: 400; }
+    .fw-medium { font-weight: 500; }
+    .fw-semibold { font-weight: 600; }
+    .fw-bold { font-weight: 700; }
+    
+    .lh-tight { line-height: var(--lh-tight); }
+    .lh-snug { line-height: var(--lh-snug); }
+    .lh-normal { line-height: var(--lh-normal); }
+    .lh-relaxed { line-height: var(--lh-relaxed); }
+    
+    .ls-tight { letter-spacing: var(--ls-tight); }
+    .ls-normal { letter-spacing: var(--ls-normal); }
+    .ls-wide { letter-spacing: var(--ls-wide); }
+</style>
