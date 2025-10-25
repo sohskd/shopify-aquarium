@@ -139,59 +139,78 @@ export class AppController {
     @Query('sort') sort: string,
     @Query('category') category: string,
   ) {
-    console.log('[Products] Route accessed - page:', page, 'sort:', sort, 'category:', category);
-    const currentPage = parseInt(page) || 1;
-    const itemsPerPage = 12;
-    
-    // Fetch all products
-    const allProducts = await this.shopifyService.getAllProducts();
-    console.log('[Products] Fetched products:', allProducts.length);
-    
-    // Apply category filter if specified
-    let filteredProducts = allProducts;
-    if (category && category !== 'all') {
-      filteredProducts = allProducts.filter(p => 
-        p.name.toLowerCase().includes(category.toLowerCase())
-      );
+    try {
+      console.log('[Products] Route accessed - page:', page, 'sort:', sort, 'category:', category);
+      const currentPage = parseInt(page) || 1;
+      const itemsPerPage = 12;
+      
+      // Fetch all products
+      const allProducts = await this.shopifyService.getAllProducts();
+      console.log('[Products] Fetched products:', allProducts.length);
+      
+      // Apply category filter if specified
+      let filteredProducts = allProducts;
+      if (category && category !== 'all') {
+        filteredProducts = allProducts.filter(p => 
+          p.name.toLowerCase().includes(category.toLowerCase())
+        );
+      }
+      
+      // Apply sorting
+      if (sort === 'price-asc') {
+        filteredProducts.sort((a, b) => {
+          const priceA = parseFloat(String(a.price).replace(/[^0-9.]/g, '') || '0');
+          const priceB = parseFloat(String(b.price).replace(/[^0-9.]/g, '') || '0');
+          return priceA - priceB;
+        });
+      } else if (sort === 'price-desc') {
+        filteredProducts.sort((a, b) => {
+          const priceA = parseFloat(String(a.price).replace(/[^0-9.]/g, '') || '0');
+          const priceB = parseFloat(String(b.price).replace(/[^0-9.]/g, '') || '0');
+          return priceB - priceA;
+        });
+      } else if (sort === 'name-asc') {
+        filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (sort === 'name-desc') {
+        filteredProducts.sort((a, b) => b.name.localeCompare(a.name));
+      }
+      
+      // Calculate pagination
+      const totalProducts = filteredProducts.length;
+      const totalPages = Math.ceil(totalProducts / itemsPerPage) || 1;
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+      
+      console.log('[Products] Returning data - totalProducts:', totalProducts, 'totalPages:', totalPages);
+      
+      return {
+        title: 'All Products - Aquatic Avenue',
+        products: paginatedProducts,
+        currentPage,
+        totalPages,
+        totalProducts,
+        itemsPerPage,
+        hasNextPage: currentPage < totalPages,
+        hasPrevPage: currentPage > 1,
+        sort: sort || 'default',
+        category: category || 'all',
+      };
+    } catch (error) {
+      console.error('[Products] Error:', error);
+      // Return empty state instead of throwing
+      return {
+        title: 'All Products - Aquatic Avenue',
+        products: [],
+        currentPage: 1,
+        totalPages: 1,
+        totalProducts: 0,
+        itemsPerPage: 12,
+        hasNextPage: false,
+        hasPrevPage: false,
+        sort: 'default',
+        category: 'all',
+      };
     }
-    
-    // Apply sorting
-    if (sort === 'price-asc') {
-      filteredProducts.sort((a, b) => {
-        const priceA = parseFloat(a.price.replace(/[^0-9.]/g, ''));
-        const priceB = parseFloat(b.price.replace(/[^0-9.]/g, ''));
-        return priceA - priceB;
-      });
-    } else if (sort === 'price-desc') {
-      filteredProducts.sort((a, b) => {
-        const priceA = parseFloat(a.price.replace(/[^0-9.]/g, ''));
-        const priceB = parseFloat(b.price.replace(/[^0-9.]/g, ''));
-        return priceB - priceA;
-      });
-    } else if (sort === 'name-asc') {
-      filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sort === 'name-desc') {
-      filteredProducts.sort((a, b) => b.name.localeCompare(a.name));
-    }
-    
-    // Calculate pagination
-    const totalProducts = filteredProducts.length;
-    const totalPages = Math.ceil(totalProducts / itemsPerPage);
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
-    
-    return {
-      title: 'All Products - Aquatic Avenue',
-      products: paginatedProducts,
-      currentPage,
-      totalPages,
-      totalProducts,
-      itemsPerPage,
-      hasNextPage: currentPage < totalPages,
-      hasPrevPage: currentPage > 1,
-      sort: sort || 'default',
-      category: category || 'all',
-    };
   }
 }
