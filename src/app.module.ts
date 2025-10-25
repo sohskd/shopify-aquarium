@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { ShopifyService } from './shopify.service';
+import { PayNowService } from './paynow.service';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 
@@ -16,6 +17,6 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     }),
   ],
   controllers: [AppController],
-  providers: [ShopifyService],
+  providers: [ShopifyService, PayNowService],
 })
 export class AppModule {}

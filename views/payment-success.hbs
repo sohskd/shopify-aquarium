@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to bottom, #F0F9FF 0%, #ffffff 100%);
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+        }
+        @keyframes checkmark {
+            0% { stroke-dashoffset: 100; }
+            100% { stroke-dashoffset: 0; }
+        }
+        .checkmark {
+            stroke-dasharray: 100;
+            animation: checkmark 0.8s ease-in-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-blue-50 to-white">
+    <div class="min-h-screen flex items-center justify-center px-4">
+        <div class="max-w-2xl w-full">
+            <!-- Success Card -->
+            <div class="bg-white rounded-3xl shadow-2xl p-12 text-center">
+                <!-- Animated Checkmark -->
+                <div class="mb-8">
+                    <svg class="w-32 h-32 mx-auto" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" fill="#10B981" opacity="0.1"/>
+                        <circle cx="50" cy="50" r="40" fill="none" stroke="#10B981" stroke-width="3" class="checkmark"/>
+                        <path d="M30 50 L45 65 L70 35" fill="none" stroke="#10B981" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" class="checkmark"/>
+                    </svg>
+                </div>
+
+                <!-- Success Message -->
+                <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
+                    Order Received!
+                </h1>
+                <p class="text-xl text-gray-600 mb-8">
+                    Thank you for your purchase from Aquatic Avenue
+                </p>
+
+                <!-- Order Details -->
+                <div class="bg-gradient-to-r from-cyan-50 to-blue-50 rounded-2xl p-6 mb-8">
+                    <div class="text-left">
+                        <p class="text-sm text-gray-600 mb-1">Order Reference</p>
+                        <p class="font-bold text-2xl text-gray-800 font-mono">{{reference}}</p>
+                    </div>
+                </div>
+
+                <!-- What's Next -->
+                <div class="text-left mb-8 space-y-4">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">What happens next?</h3>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-2xl">📧</span>
+                        <div>
+                            <p class="font-medium text-gray-800">Confirmation Email</p>
+                            <p class="text-sm text-gray-600">We'll send you an order confirmation within 24 hours</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-2xl">✅</span>
+                        <div>
+                            <p class="font-medium text-gray-800">Payment Verification</p>
+                            <p class="text-sm text-gray-600">For PayNow payments, we'll verify your transfer within 24 hours</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-2xl">📦</span>
+                        <div>
+                            <p class="font-medium text-gray-800">Order Processing</p>
+                            <p class="text-sm text-gray-600">We'll prepare your aquatic plants with care</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-2xl">🚚</span>
+                        <div>
+                            <p class="font-medium text-gray-800">Delivery</p>
+                            <p class="text-sm text-gray-600">Your order will be delivered within 3-5 business days</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="space-y-4">
+                    <a href="/" class="block w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-8 py-4 rounded-full font-semibold hover:shadow-xl hover:scale-105 transition-all duration-300">
+                        Continue Shopping
+                    </a>
+                    <a href="/#contact" class="block w-full text-cyan-600 hover:text-cyan-800 font-medium">
+                        Contact Us
+                    </a>
+                </div>
+            </div>
+
+            <!-- Additional Info -->
+            <div class="text-center mt-8 text-gray-600">
+                <p class="text-sm">Questions? Email us at <a href="mailto:hello@aquaticavenue.com" class="text-cyan-600 hover:text-cyan-800 font-medium">hello@aquaticavenue.com</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -43,8 +43,10 @@
           <span class="text-gray-700">Subtotal</span>
           <span id="subtotal" class="text-lg font-semibold text-gray-900">$0.00 SGD</span>
         </div>
-        <button id="checkoutBtn" class="w-full bg-gray-900 text-white py-3 rounded-full hover:bg-gray-800">Checkout (Placeholder)</button>
-        <p class="text-xs text-gray-500 mt-2 text-center">Later, this can redirect to a Shopify checkout session.</p>
+        <button id="checkoutBtn" class="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white py-4 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300">
+          Proceed to Payment
+        </button>
+        <p class="text-xs text-gray-500 mt-2 text-center">Pay with Credit Card (Shopify) or PayNow</p>
       </div>
     </div>
   </section>
@@ -71,6 +73,8 @@
 
     function renderCart() {
       const items = loadCart();
+      console.log('[Cart] Loaded items:', items);
+      
       const empty = document.getElementById('cartEmpty');
       const list = document.getElementById('cartItems');
       const summary = document.getElementById('cartSummary');
@@ -86,8 +90,15 @@
       summary.classList.remove('hidden');
 
       let subtotal = 0;
+      console.log('[Cart] Calculating total...');
       items.forEach((item, idx) => {
-        subtotal += item.price * item.quantity;
+        console.log(`[Cart] Item ${idx}:`, item);
+        // Parse price string (e.g., "$10.00 SGD" -> 10.00)
+        const numericPrice = typeof item.price === 'string' 
+          ? parseFloat(item.price.replace(/[^0-9.]/g, ''))
+          : item.price;
+        console.log(`[Cart] Parsed price: ${numericPrice}`);
+        subtotal += numericPrice * item.quantity;
         const row = document.createElement('div');
         row.className = 'bg-white rounded-lg p-4 shadow-sm flex items-center gap-4';
         const imageSrc = item.image && item.image.startsWith('http') ? item.image : `/images/${item.image}`;
@@ -95,7 +106,7 @@
           <img src="${imageSrc}" class="w-20 h-20 object-cover rounded" alt="${item.name}">
           <div class="flex-1">
             <p class="text-sm text-gray-900">${item.name}</p>
-            <p class="text-sm text-gray-600">${formatPrice(item.price)}</p>
+            <p class="text-sm text-gray-600">${typeof item.price === 'string' ? item.price : formatPrice(item.price)}</p>
           </div>
           <div class="flex items-center gap-2">
             <button data-action="dec" data-index="${idx}" class="px-2 py-1 border rounded">-</button>
@@ -122,7 +133,12 @@
       };
 
       document.getElementById('checkoutBtn').onclick = () => {
-        alert('Checkout would redirect to Shopify checkout (to be implemented).');
+        const items = loadCart();
+        if (items.length > 0) {
+          window.location.href = '/checkout/payment';
+        } else {
+          alert('Your cart is empty!');
+        }
       };
       updateCartCount();
     }

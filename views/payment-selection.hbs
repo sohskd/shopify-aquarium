@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to bottom, #F0F9FF 0%, #ffffff 100%);
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+        }
+        .payment-card {
+            transition: all 0.3s ease;
+        }
+        .payment-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(14, 165, 233, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-blue-50 to-white min-h-screen">
+    <div class="container mx-auto px-4 py-16 max-w-5xl">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <a href="/" class="inline-block mb-6">
+                <h1 class="text-4xl font-semibold tracking-wider bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">AQUATIC AVENUE</h1>
+            </a>
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800">Select Payment Method</h2>
+            <p class="text-lg text-gray-600">Choose how you'd like to pay</p>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 mb-12">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">Order Summary</h3>
+            <div id="orderSummary" class="space-y-3 mb-6">
+                <!-- Populated by JavaScript -->
+            </div>
+            <div class="border-t border-gray-200 pt-6">
+                <div class="flex justify-between items-center">
+                    <span class="text-2xl font-bold text-gray-800">Total</span>
+                    <span id="totalAmount" class="text-3xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">$0.00 SGD</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Methods -->
+        <div class="grid md:grid-cols-2 gap-8 mb-12">
+            <!-- Shopify Checkout (Credit Card) -->
+            <div class="payment-card bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-8 cursor-pointer border-2 border-transparent hover:border-cyan-500" onclick="proceedToShopify()">
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">Credit / Debit Card</h3>
+                    <p class="text-gray-600 mb-6">Secure payment via Shopify</p>
+                    <div class="flex justify-center space-x-2 mb-6">
+                        <span class="text-xs bg-white px-3 py-1 rounded-full text-gray-600 font-medium">Visa</span>
+                        <span class="text-xs bg-white px-3 py-1 rounded-full text-gray-600 font-medium">Mastercard</span>
+                        <span class="text-xs bg-white px-3 py-1 rounded-full text-gray-600 font-medium">Amex</span>
+                    </div>
+                    <button class="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-6 py-4 rounded-full font-semibold hover:shadow-xl transition-all duration-300">
+                        Pay with Card
+                    </button>
+                </div>
+            </div>
+
+            <!-- PayNow QR -->
+            <div class="payment-card bg-gradient-to-br from-teal-50 to-green-50 rounded-2xl p-8 cursor-pointer border-2 border-transparent hover:border-teal-500" onclick="proceedToPayNow()">
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-gradient-to-r from-teal-500 to-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">PayNow QR</h3>
+                    <p class="text-gray-600 mb-6">Instant bank transfer</p>
+                    <div class="flex justify-center space-x-2 mb-6">
+                        <span class="text-xs bg-white px-3 py-1 rounded-full text-gray-600 font-medium">DBS</span>
+                        <span class="text-xs bg-white px-3 py-1 rounded-full text-gray-600 font-medium">OCBC</span>
+                        <span class="text-xs bg-white px-3 py-1 rounded-full text-gray-600 font-medium">UOB</span>
+                    </div>
+                    <button class="w-full bg-gradient-to-r from-teal-500 to-green-500 text-white px-6 py-4 rounded-full font-semibold hover:shadow-xl transition-all duration-300">
+                        Pay with PayNow
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back to Cart -->
+        <div class="text-center">
+            <a href="/cart" class="text-cyan-600 hover:text-cyan-800 font-medium inline-flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+                Back to Cart
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const CART_KEY = 'aa_cart';
+        let cartItems = [];
+        let totalAmount = 0;
+
+        function loadCart() {
+            try {
+                return JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+            } catch {
+                return [];
+            }
+        }
+
+        function calculateTotal(items) {
+            return items.reduce((sum, item) => {
+                // Handle both string ("$10.00 SGD") and number (10.00) formats
+                let price;
+                if (typeof item.price === 'string') {
+                    price = parseFloat(item.price.replace(/[^0-9.]/g, ''));
+                } else if (typeof item.price === 'number') {
+                    price = item.price;
+                } else {
+                    price = 0;
+                }
+                return sum + (price * item.quantity);
+            }, 0);
+        }
+
+        function renderOrderSummary() {
+            cartItems = loadCart();
+            totalAmount = calculateTotal(cartItems);
+
+            // Debug logging
+            console.log('[Payment] Cart items:', cartItems);
+            console.log('[Payment] Total amount:', totalAmount);
+
+            if (cartItems.length === 0) {
+                alert('Your cart is empty!');
+                window.location.href = '/';
+                return;
+            }
+
+            const summaryEl = document.getElementById('orderSummary');
+            const totalEl = document.getElementById('totalAmount');
+
+            summaryEl.innerHTML = cartItems.map(item => {
+                // Handle both string and number price formats
+                let itemPrice;
+                if (typeof item.price === 'string') {
+                    itemPrice = parseFloat(item.price.replace(/[^0-9.]/g, ''));
+                } else if (typeof item.price === 'number') {
+                    itemPrice = item.price;
+                } else {
+                    itemPrice = 0;
+                }
+                
+                const itemTotal = itemPrice * item.quantity;
+                console.log(`[Payment] Item: ${item.name}, Price: ${itemPrice}, Qty: ${item.quantity}, Total: ${itemTotal}`);
+                
+                // Format price for display
+                const priceDisplay = typeof item.price === 'string' ? item.price : `$${itemPrice.toFixed(2)} SGD`;
+                
+                return `
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                        <div class="flex-1">
+                            <p class="font-medium text-gray-800">${item.name}</p>
+                            <p class="text-sm text-gray-500">Qty: ${item.quantity}</p>
+                        </div>
+                        <span class="font-semibold text-gray-800">${priceDisplay}</span>
+                    </div>
+                `;
+            }).join('');
+
+            totalEl.textContent = `$${totalAmount.toFixed(2)} SGD`;
+            console.log('[Payment] Final total displayed:', totalAmount.toFixed(2));
+        }
+
+        async function proceedToShopify() {
+            if (cartItems.length === 0) {
+                alert('Your cart is empty!');
+                window.location.href = '/';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ items: cartItems })
+                });
+
+                const data = await response.json();
+                
+                if (data.checkoutUrl) {
+                    // Clear cart before redirecting
+                    localStorage.removeItem(CART_KEY);
+                    // Redirect to Shopify checkout
+                    window.location.href = data.checkoutUrl;
+                } else {
+                    alert('Unable to create checkout. Please try again.');
+                }
+            } catch (error) {
+                console.error('Checkout error:', error);
+                alert('An error occurred. Please try again.');
+            }
+        }
+
+        function proceedToPayNow() {
+            if (cartItems.length === 0) {
+                alert('Your cart is empty!');
+                window.location.href = '/';
+                return;
+            }
+
+            if (totalAmount <= 0) {
+                alert('Cart total is $0. Please add items to your cart.');
+                window.location.href = '/cart';
+                return;
+            }
+
+            console.log('[Payment] Proceeding to PayNow with total:', totalAmount);
+            // Redirect to PayNow page with total amount
+            window.location.href = `/checkout/paynow?total=${totalAmount.toFixed(2)}`;
+        }
+
+        // Initialize on page load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', renderOrderSummary);
+        } else {
+            // DOM already loaded
+            renderOrderSummary();
+        }
+        
+        // Also run immediately as backup
+        setTimeout(renderOrderSummary, 100);
+    </script>
+</body>
+</html>

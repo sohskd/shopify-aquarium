@@ -131,16 +131,9 @@
                     </div>
 
                     <!-- Add to Cart Button -->
-                    <button id="addToCartBtn" class="w-full bg-white border-2 border-gray-900 text-gray-900 py-3 rounded-full font-medium hover:bg-gray-900 hover:text-white transition-colors duration-300 mb-4">
+                    <button id="addToCartBtn" class="w-full bg-white border-2 border-gray-900 text-gray-900 py-3 rounded-full font-medium hover:bg-gray-900 hover:text-white transition-colors duration-300 mb-6">
                         Add to cart
                     </button>
-
-                    <!-- PayPal Button (Placeholder) -->
-                    <button class="w-full bg-yellow-400 text-gray-900 py-3 rounded-full font-semibold hover:bg-yellow-500 transition-colors duration-300 mb-4">
-                        Pay with PayPal
-                    </button>
-
-                    <p class="text-sm text-gray-600 text-center mb-6">More payment options</p>
 
                     <!-- Product Description -->
                     <div class="border-t border-gray-200 pt-6">
@@ -282,7 +275,7 @@
             const items = loadCart();
             const id = {{product.id}};
             const existing = items.find(i => i.id === id);
-            const numericPrice = parseFloat(String(`{{product.price}}`).replace(/[^0-9.]/g, '')) || 0;
+            
             if (existing) {
                 existing.quantity += qty;
             } else {
@@ -290,7 +283,7 @@
                 items.push({
                     id,
                     name: `{{product.name}}`,
-                    price: numericPrice,
+                    price: `{{product.price}}`, // Keep original format (e.g., "$10.00 SGD")
                     image: productImage,
                     quantity: qty,
                     shopifyVariantId: `{{product.shopifyVariantId}}`

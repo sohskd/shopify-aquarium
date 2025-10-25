@@ -1,9 +1,13 @@
-import { Controller, Get, Post, Render, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Render, Param, Body, Query } from '@nestjs/common';
 import { ShopifyService } from './shopify.service';
+import { PayNowService } from './paynow.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly shopifyService: ShopifyService) {}
+  constructor(
+    private readonly shopifyService: ShopifyService,
+    private readonly payNowService: PayNowService,
+  ) {}
   
   // Fallback products in case Shopify is not configured
   private fallbackProducts = [
@@ -75,5 +79,56 @@ export class AppController {
   async createCheckout(@Body() body: { items: any[] }) {
     const checkoutUrl = await this.shopifyService.createCheckout(body.items);
     return { checkoutUrl };
+  }
+
+  @Get('checkout/payment')
+  @Render('payment-selection')
+  getPaymentSelection() {
+    return { title: 'Select Payment Method - Aquatic Avenue' };
+  }
+
+  @Get('checkout/paynow')
+  @Render('paynow-payment')
+  async getPayNowPayment(@Query('total') total: string, @Query('ref') ref: string) {
+    const amount = parseFloat(total) || 0;
+    const reference = ref || this.payNowService.generateOrderReference();
+    
+    // FOR TESTING: Use a static test QR code
+    const qrCode = '/images/paynowqr.jpg'; // Your custom QR code
+    
+    // Comment out the try-catch block when using static QR
+    /*
+    try {
+      const qrCode = await this.payNowService.generatePayNowQR(amount, reference);
+      return {
+        title: 'PayNow Payment - Aquatic Avenue',
+        qrCode,
+        amount: amount.toFixed(2),
+        reference,
+      };
+    } catch (error) {
+      return {
+        title: 'PayNow Payment - Aquatic Avenue',
+        error: 'Failed to generate QR code',
+      };
+    }
+    */
+    
+    // Return with your custom QR code
+    return {
+      title: 'PayNow Payment - Aquatic Avenue',
+      qrCode,
+      amount: amount.toFixed(2),
+      reference,
+    };
+  }
+
+  @Get('payment/success')
+  @Render('payment-success')
+  getPaymentSuccess(@Query('ref') ref: string) {
+    return {
+      title: 'Payment Successful - Aquatic Avenue',
+      reference: ref || 'N/A',
+    };
   }
 }
