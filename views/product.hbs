@@ -180,12 +180,9 @@
 
             <!-- Action buttons -->
             <div class="space-y-3">
-                <a href="/cart" id="viewCartBtn" class="block w-full text-center border-2 border-gray-300 text-gray-700 py-3 rounded-full hover:bg-gray-50 transition-colors">
-                    View cart (<span id="modalCartCount">0</span>)
+                <a href="/cart" id="viewCartBtn" class="block w-full text-center bg-gradient-to-r from-cyan-500 to-blue-500 text-white py-3 rounded-full hover:shadow-xl transition-all">
+                    View cart & Checkout (<span id="modalCartCount">0</span>)
                 </a>
-                <button id="checkoutBtn" class="w-full bg-gray-900 text-white py-3 rounded-full hover:bg-gray-800 transition-colors">
-                    Check out
-                </button>
                 <button id="continueShoppingBtn" class="w-full text-gray-600 hover:text-gray-900 py-2">
                     Continue shopping
                 </button>
@@ -321,32 +318,6 @@
         // Modal event listeners
         document.getElementById('closeModal').addEventListener('click', hideCartModal);
         document.getElementById('continueShoppingBtn').addEventListener('click', hideCartModal);
-        document.getElementById('checkoutBtn').addEventListener('click', async () => {
-            const items = loadCart();
-            if (!items.length) {
-                alert('Your cart is empty');
-                return;
-            }
-            
-            try {
-                const response = await fetch('/api/checkout', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ items })
-                });
-                
-                const data = await response.json();
-                
-                if (data.checkoutUrl) {
-                    window.location.href = data.checkoutUrl;
-                } else {
-                    alert('Unable to create checkout. Please try again.');
-                }
-            } catch (error) {
-                console.error('Checkout error:', error);
-                alert('Unable to create checkout. Please try again.');
-            }
-        });
 
         // Close modal when clicking outside
         document.getElementById('cartModal').addEventListener('click', (e) => {

@@ -155,6 +155,90 @@ export class ShopifyService {
     };
   }
 
+  async createCheckout(cartItems: CartItem[]): Promise<string> {
+    // Fallback if not configured
+    if (!this.storefrontAccessToken || !this.shopDomain) {
+      console.warn('[Shopify] Missing credentials. Returning cart fallback.');
+      return '/cart';
+    }
+
+    // Filter only items that have a mapped Shopify variant id
+    const lines = (cartItems || [])
+      .filter((i) => !!i.shopifyVariantId && i.quantity > 0)
+      .map((i) => ({
+        merchandiseId: `gid://shopify/ProductVariant/${i.shopifyVariantId}`,
+        quantity: i.quantity,
+      }));
+
+    if (!lines.length) {
+      console.warn('[Shopify] No items with shopifyVariantId found in cart.');
+      return '/cart';
+    }
+
+    // Use the newer cartCreate mutation
+    const query = `
+      mutation cartCreate($input: CartInput!) {
+        cartCreate(input: $input) {
+          cart {
+            id
+            checkoutUrl
+          }
+          userErrors {
+            field
+            message
+          }
+        }
+      }
+    `;
+
+    const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+    
+    const variables = { 
+      input: { 
+        lines: lines,
+        buyerIdentity: {
+          countryCode: 'SG'
+        },
+        attributes: [
+          {
+            key: '_return_url',
+            value: `${baseUrl}/payment/success`
+          }
+        ]
+      } 
+    };
+
+    try {
+      const res = await fetch(`https://${this.shopDomain}/api/2024-01/graphql.json`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Shopify-Storefront-Access-Token': this.storefrontAccessToken,
+        },
+        body: JSON.stringify({ query, variables }),
+      });
+
+      const json = await res.json();
+      
+      if (json?.data?.cartCreate?.userErrors?.length > 0) {
+        console.error('[Shopify] cartCreate userErrors:', json.data.cartCreate.userErrors);
+        return '/cart';
+      }
+      
+      const checkoutUrl = json?.data?.cartCreate?.cart?.checkoutUrl;
+      if (checkoutUrl) {
+        console.log('[Shopify] Cart created successfully, redirecting to:', checkoutUrl);
+        return checkoutUrl;
+      }
+
+      console.error('[Shopify] cartCreate error:', json?.errors || json);
+      return '/cart';
+    } catch (err) {
+      console.error('[Shopify] Network/API error:', err);
+      return '/cart';
+    }
+  }
+
   // Create a draft order in Shopify (for PayNow payments)
   async createDraftOrder(items: CartItem[], customerInfo: any) {
     if (!this.adminAccessToken) {
@@ -171,14 +255,29 @@ export class ShopifyService {
       const draftOrder = {
         draft_order: {
           line_items: lineItems,
-          customer: {
-            email: customerInfo.email || 'customer@example.com',
+          shipping_address: {
             first_name: customerInfo.firstName || 'Customer',
             last_name: customerInfo.lastName || '',
+            address1: customerInfo.address || '',
+            city: 'Singapore',
+            province: 'Singapore',
+            country: 'Singapore',
+            zip: customerInfo.postalCode || '',
+            phone: customerInfo.phone || '',
           },
-          note: `PayNow Payment - Reference: ${customerInfo.reference || 'N/A'}`,
+          billing_address: {
+            first_name: customerInfo.firstName || 'Customer',
+            last_name: customerInfo.lastName || '',
+            address1: customerInfo.address || '',
+            city: 'Singapore',
+            province: 'Singapore',
+            country: 'Singapore',
+            zip: customerInfo.postalCode || '',
+            phone: customerInfo.phone || '',
+          },
+          note: `PayNow Payment - Reference: ${customerInfo.reference || 'N/A'}\nCustomer: ${customerInfo.firstName} ${customerInfo.lastName}\nContact: ${customerInfo.email || customerInfo.phone || 'N/A'}`,
           tags: 'paynow, pending-payment',
-          email: customerInfo.email || 'customer@example.com',
+          email: customerInfo.email || '',
         }
       };
 

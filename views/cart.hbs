@@ -46,7 +46,7 @@
         <button id="checkoutBtn" class="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white py-4 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300">
           Proceed to Payment
         </button>
-        <p class="text-xs text-gray-500 mt-2 text-center">Pay with Credit Card (Shopify) or PayNow</p>
+        <p class="text-xs text-gray-500 mt-2 text-center">Pay with Credit Card or PayNow</p>
       </div>
     </div>
   </section>
@@ -134,11 +134,13 @@
 
       document.getElementById('checkoutBtn').onclick = () => {
         const items = loadCart();
-        if (items.length > 0) {
-          window.location.href = '/checkout/payment';
-        } else {
+        if (items.length === 0) {
           alert('Your cart is empty!');
+          return;
         }
+        
+        // Redirect to payment selection page
+        window.location.href = '/checkout/payment';
       };
       updateCartCount();
     }

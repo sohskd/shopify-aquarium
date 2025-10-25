@@ -75,6 +75,12 @@ export class AppController {
     return {};
   }
 
+  @Post('api/checkout')
+  async createCheckout(@Body() body: { items: any[] }) {
+    const checkoutUrl = await this.shopifyService.createCheckout(body.items);
+    return { checkoutUrl };
+  }
+
   @Get('checkout/payment')
   @Render('payment-selection')
   getPaymentSelection() {
