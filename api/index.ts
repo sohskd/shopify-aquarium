@@ -9,6 +9,13 @@ import express from 'express';
 let cachedApp: NestExpressApplication;
 
 async function bootstrap() {
+  // Debug environment variables
+  console.log('[Vercel] Environment variables check:', {
+    SHOPIFY_SHOP_DOMAIN: process.env.SHOPIFY_SHOP_DOMAIN || 'NOT SET',
+    SHOPIFY_STOREFRONT_TOKEN: process.env.SHOPIFY_STOREFRONT_TOKEN ? `SET (${process.env.SHOPIFY_STOREFRONT_TOKEN.length} chars)` : 'NOT SET',
+    NODE_ENV: process.env.NODE_ENV || 'NOT SET'
+  });
+
   if (cachedApp) {
     return cachedApp;
   }
@@ -19,7 +26,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(
     AppModule,
     adapter,
-    { logger: ['error', 'warn'] }
+    { logger: ['error', 'warn', 'log'] }
   );
 
   // Configure Handlebars
