@@ -1,0 +1,54 @@
+Keeping the functionality same. 
+Build a modern, visually engaging website for a cafe. The design should be sleek, clean, and contemporary with a warm, inviting color palette that reflects a cozy cafe atmosphere. The website should showcase the cafe’s offerings with scrollable food and drink images and interactive sections. Include the following features:
+
+Home / Hero Section:
+
+Full-width background image or carousel of featured dishes or drinks.
+
+Catchy tagline like: “Welcome to [Cafe Name], where flavor meets comfort.”
+
+Call-to-action buttons like “View Menu” and “Reserve a Table.”
+
+Menu / Food Showcase Section:
+
+Scrollable gallery of food and drink items with high-quality images.
+
+Include dish name, brief description, and price overlay on hover.
+
+Optional: filter by category (coffee, desserts, meals).
+
+About Section:
+
+Brief story about the cafe, its concept, and ambiance.
+
+Include images of the interior or barista in action.
+
+Specials / Featured Items Section:
+
+Highlight signature dishes or seasonal specials with vibrant images.
+
+Contact / Location Section:
+
+Include address, map embed, contact form, and social media links.
+
+Optional: button to make online reservations.
+
+Design Style:
+
+Modern, minimalistic, and visually rich.
+
+Smooth scrolling and subtle animations.
+
+Clean typography with good contrast for readability.
+
+Warm and inviting color palette (earthy tones, pastels, or coffee-inspired colors).
+
+Fully responsive for mobile and desktop.
+
+Additional Notes:
+
+Focus on food imagery and a scrollable gallery for visual engagement.
+
+Include hover effects, subtle transitions, and interactive buttons.
+
+Maintain a cozy yet modern cafe vibe throughout the site.

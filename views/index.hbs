@@ -5,106 +5,188 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --ocean-deep: #0A2540;
+            --ocean-blue: #0EA5E9;
+            --turquoise: #14B8A6;
+            --coral: #FF6B6B;
+            --light-blue: #F0F9FF;
+        }
         body {
             font-family: 'Inter', sans-serif;
+            background: linear-gradient(to bottom, #F0F9FF 0%, #ffffff 100%);
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        /* Floating Bubbles Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.4; }
+            50% { transform: translateY(-20px) translateX(10px); opacity: 0.8; }
+        }
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(14,165,233,0.3));
+            animation: float 6s ease-in-out infinite;
+        }
+        .bubble:nth-child(1) { width: 80px; height: 80px; left: 10%; top: 20%; animation-delay: 0s; }
+        .bubble:nth-child(2) { width: 60px; height: 60px; left: 70%; top: 40%; animation-delay: 2s; }
+        .bubble:nth-child(3) { width: 100px; height: 100px; left: 40%; top: 60%; animation-delay: 4s; }
+        .bubble:nth-child(4) { width: 50px; height: 50px; left: 85%; top: 70%; animation-delay: 1s; }
+        
+        /* Wave Animation */
+        @keyframes wave {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-25px); }
+        }
+        .wave-svg { animation: wave 10s ease-in-out infinite; }
+        
+        /* Smooth Scroll */
+        html { scroll-behavior: smooth; }
+        
+        /* Glass Morphism Nav */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(14, 165, 233, 0.1);
+        }
+        .glass-nav.scrolled {
+            background: rgba(10, 37, 64, 0.95);
+            color: white;
+        }
+        
+        /* Product Card Hover */
+        .product-card {
+            transition: all 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(14, 165, 233, 0.3);
         }
     </style>
 </head>
-<body class="bg-white">
+<body class="bg-gradient-to-b from-blue-50 to-white">
     <!-- Navigation Header -->
-    <nav class="bg-white border-b border-gray-200">
+    <nav id="mainNav" class="glass-nav fixed w-full top-0 z-50 transition-all duration-300">
         <div class="container mx-auto px-4">
             <!-- Top bar with logo and icons -->
-            <div class="flex items-center justify-between py-4">
+            <div class="flex items-center justify-between py-5">
                 <div class="flex-1"></div>
                 <div class="text-center">
-                    <h1 class="text-2xl font-light tracking-widest">AQUATIC AVENUE</h1>
-                    <p class="text-xs text-gray-500 tracking-wide">THE AQUARIUM SPECIALIST</p>
+                    <h1 class="text-3xl font-semibold tracking-wider bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">AQUATIC AVENUE</h1>
+                    <p class="text-xs text-cyan-600 tracking-widest mt-1">DIVE INTO WONDER</p>
                 </div>
-                <div class="flex-1 flex justify-end items-center space-x-4">
-                    <button class="p-2 hover:bg-gray-100 rounded-full">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex-1 flex justify-end items-center space-x-3">
+                    <button class="p-2.5 hover:bg-cyan-50 rounded-full transition-colors">
+                        <svg class="w-5 h-5 text-cyan-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                     </button>
-                    <button class="p-2 hover:bg-gray-100 rounded-full">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button class="p-2.5 hover:bg-cyan-50 rounded-full transition-colors">
+                        <svg class="w-5 h-5 text-cyan-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                     </button>
-                    <a href="/cart" class="relative p-2 hover:bg-gray-100 rounded-full">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="/cart" class="relative p-2.5 hover:bg-cyan-50 rounded-full transition-colors">
+                        <svg class="w-5 h-5 text-cyan-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                         </svg>
-                        <span id="cartCount" class="absolute -top-1 -right-1 bg-gray-900 text-white text-[10px] rounded-full px-1.5 py-0.5">0</span>
+                        <span id="cartCount" class="absolute -top-1 -right-1 bg-gradient-to-r from-coral-500 to-orange-500 text-white text-[10px] rounded-full px-1.5 py-0.5 shadow-lg">0</span>
                     </a>
                 </div>
             </div>
             
             <!-- Navigation Menu -->
-            <div class="flex items-center justify-center space-x-8 py-4 text-sm border-t border-gray-100">
-                <a href="/" class="text-gray-900 hover:text-gray-600 font-medium underline underline-offset-8">Home</a>
-                <a href="/our-works" class="text-gray-600 hover:text-gray-900">Our Works</a>
-                <div class="relative group">
-                    <button class="text-gray-600 hover:text-gray-900 flex items-center">
-                        Shop all
-                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </button>
-                </div>
-                <div class="relative group">
-                    <button class="text-gray-600 hover:text-gray-900 flex items-center">
-                        Guides
-                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </button>
-                </div>
-                <a href="/about-us" class="text-gray-600 hover:text-gray-900">About us</a>
+            <div class="flex items-center justify-center space-x-10 py-4 text-sm border-t border-cyan-100">
+                <a href="/" class="text-cyan-700 hover:text-cyan-900 font-medium relative group">
+                    Home
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 group-hover:w-full transition-all duration-300"></span>
+                </a>
+                <a href="#exhibits" class="text-cyan-600 hover:text-cyan-900 relative group">
+                    Exhibits
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 group-hover:w-full transition-all duration-300"></span>
+                </a>
+                <a href="#products" class="text-cyan-600 hover:text-cyan-900 relative group">
+                    Shop All
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 group-hover:w-full transition-all duration-300"></span>
+                </a>
+                <a href="#about" class="text-cyan-600 hover:text-cyan-900 relative group">
+                    About Us
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 group-hover:w-full transition-all duration-300"></span>
+                </a>
+                <a href="#contact" class="text-cyan-600 hover:text-cyan-900 relative group">
+                    Visit
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 group-hover:w-full transition-all duration-300"></span>
+                </a>
             </div>
         </div>
     </nav>
 
+    <!-- Spacer for fixed nav -->
+    <div class="h-32"></div>
+
     <!-- Hero Carousel Section -->
-    <div id="heroCarousel" class="relative h-[500px] overflow-hidden">
+    <div id="heroCarousel" class="relative h-[600px] overflow-hidden bg-gradient-to-b from-cyan-900 via-blue-800 to-cyan-700">
+        <!-- Floating Bubbles -->
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        
         <!-- Slide 1 -->
-        <div class="carousel-slide absolute inset-0 transition-opacity duration-700 opacity-100 bg-cover bg-center" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/images/image1.jpg');">
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-700 opacity-100 bg-cover bg-center" style="background-image: linear-gradient(rgba(10,37,64,0.7), rgba(6,182,212,0.6)), url('/images/image1.jpg');">
             <div class="container mx-auto px-4 md:px-8 lg:px-16 h-full flex items-center">
-                <div class="text-white max-w-xl">
-                    <h2 class="text-4xl md:text-5xl font-light mb-4">The Aquatic Avenue Geek Squad</h2>
-                    <p class="text-base md:text-lg mb-8 leading-relaxed">Keeping your aquarium in tip-top condition requires time, dedication and attention to detail. That's why our clients entrust it to us.</p>
-                    <button class="border-2 border-white text-white px-8 py-3 rounded-full hover:bg-white hover:text-gray-900 transition duration-300">
-                        Enquire now
-                    </button>
+                <div class="text-white max-w-2xl">
+                    <h2 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">Dive Into Wonder at <span class="text-cyan-300">Aquatic Avenue</span></h2>
+                    <p class="text-xl md:text-2xl mb-10 leading-relaxed text-cyan-50">Explore the depths of aquatic beauty. Premium plants, expert care, and everything you need for a thriving underwater world.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#products" class="bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-8 py-4 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                            Explore Products
+                        </a>
+                        <a href="#contact" class="border-2 border-cyan-300 text-cyan-100 px-8 py-4 rounded-full font-semibold hover:bg-cyan-300 hover:text-cyan-900 transition-all duration-300">
+                            Plan Your Visit
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Slide 2 -->
-        <div class="carousel-slide absolute inset-0 transition-opacity duration-700 opacity-0 bg-cover bg-center" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/images/image2.jpg');">
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-700 opacity-0 bg-cover bg-center" style="background-image: linear-gradient(rgba(10,37,64,0.7), rgba(20,184,166,0.6)), url('/images/image2.jpg');">
             <div class="container mx-auto px-4 md:px-8 lg:px-16 h-full flex items-center">
-                <div class="text-white max-w-xl">
-                    <h2 class="text-4xl md:text-5xl font-light mb-4">Premium Aquarium Solutions</h2>
-                    <p class="text-base md:text-lg mb-8 leading-relaxed">From custom tanks to expert maintenance, we provide comprehensive aquarium services tailored to your needs.</p>
-                    <button class="border-2 border-white text-white px-8 py-3 rounded-full hover:bg-white hover:text-gray-900 transition duration-300">
-                        Learn more
-                    </button>
+                <div class="text-white max-w-2xl">
+                    <h2 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">Premium <span class="text-teal-300">Aquarium Solutions</span></h2>
+                    <p class="text-xl md:text-2xl mb-10 leading-relaxed text-teal-50">From custom tanks to expert maintenance, we provide comprehensive aquarium services tailored to your aquatic dreams.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#about" class="bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-8 py-4 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                            Learn More
+                        </a>
+                        <a href="#products" class="border-2 border-teal-300 text-teal-100 px-8 py-4 rounded-full font-semibold hover:bg-teal-300 hover:text-teal-900 transition-all duration-300">
+                            Shop Now
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Slide 3 -->
-        <div class="carousel-slide absolute inset-0 transition-opacity duration-700 opacity-0 bg-cover bg-center" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/images/image3.jpg');">
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-700 opacity-0 bg-cover bg-center" style="background-image: linear-gradient(rgba(10,37,64,0.7), rgba(14,165,233,0.6)), url('/images/image3.jpg');">
             <div class="container mx-auto px-4 md:px-8 lg:px-16 h-full flex items-center">
-                <div class="text-white max-w-xl">
-                    <h2 class="text-4xl md:text-5xl font-light mb-4">Quality Aquatic Life</h2>
-                    <p class="text-base md:text-lg mb-8 leading-relaxed">Discover our wide selection of healthy fish, vibrant plants, and premium aquarium equipment.</p>
-                    <button class="border-2 border-white text-white px-8 py-3 rounded-full hover:bg-white hover:text-gray-900 transition duration-300">
-                        Shop now
-                    </button>
+                <div class="text-white max-w-2xl">
+                    <h2 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">Discover <span class="text-blue-300">Quality Aquatic Life</span></h2>
+                    <p class="text-xl md:text-2xl mb-10 leading-relaxed text-blue-50">Healthy fish, vibrant plants, and premium equipment. Everything you need to create your perfect underwater paradise.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#products" class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-8 py-4 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                            Shop Collection
+                        </a>
+                        <a href="#exhibits" class="border-2 border-blue-300 text-blue-100 px-8 py-4 rounded-full font-semibold hover:bg-blue-300 hover:text-blue-900 transition-all duration-300">
+                            View Exhibits
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -253,36 +335,48 @@
         })();
     </script>
 
+    <!-- Wave Divider -->
+    <div class="relative">
+        <svg class="wave-svg w-full h-24" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0.67,0,0,321.39,56.44Z" fill="#0EA5E9" opacity="0.3"></path>
+            <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="#0EA5E9" opacity="0.5"></path>
+        </svg>
+    </div>
+
     <!-- Mission Statement -->
-    <section class="py-16 bg-gray-700 text-white">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl md:text-4xl font-light mb-4">Making the aquarium hobby more accessible</h2>
-            <p class="text-base md:text-lg max-w-3xl mx-auto">By empowering hobbyists with the resources and knowledge they need to increase their understanding of aquatic biodiversity.</p>
+    <section id="about" class="py-20 bg-gradient-to-b from-cyan-50 to-white relative overflow-hidden">
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-700 to-blue-700 bg-clip-text text-transparent">Explore the Depths of Aquatic Beauty</h2>
+            <p class="text-lg md:text-xl max-w-4xl mx-auto text-gray-700 leading-relaxed">At Aquatic Avenue, we're passionate about making the aquarium hobby accessible to everyone. From beginners to experts, we provide premium plants, equipment, and the knowledge you need to create thriving underwater ecosystems.</p>
         </div>
     </section>
 
-    <!-- Shop Best Sellers -->
-    <section class="py-16 bg-gray-50">
+    <!-- Shop Best Sellers / Marine Life Showcase -->
+    <section id="products" class="py-20 bg-gradient-to-b from-white to-cyan-50">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl md:text-4xl font-light text-gray-800 mb-12">Shop Best Sellers</h2>
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-700 to-blue-700 bg-clip-text text-transparent">Featured Aquatic Collection</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Discover our premium selection of aquatic plants and accessories</p>
+            </div>
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                 {{#each bestSellers}}
-                <a href="/product/{{this.id}}" class="bg-white rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 block">
-                    <div class="aspect-square bg-gray-200 flex items-center justify-center overflow-hidden">
+                <a href="/product/{{this.id}}" class="product-card group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl block">
+                    <div class="aspect-square bg-gradient-to-br from-cyan-100 to-blue-100 flex items-center justify-center overflow-hidden relative">
                         {{#if this.image}}
                             {{#if (startsWith this.image "http")}}
-                                <img src="{{this.image}}" alt="{{this.name}}" class="w-full h-full object-cover">
+                                <img src="{{this.image}}" alt="{{this.name}}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             {{else}}
-                                <img src="/images/{{this.image}}" alt="{{this.name}}" class="w-full h-full object-cover">
+                                <img src="/images/{{this.image}}" alt="{{this.name}}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             {{/if}}
                         {{else}}
-                            <span class="text-gray-400">No Image</span>
+                            <span class="text-cyan-400">🌿 No Image</span>
                         {{/if}}
+                        <div class="absolute inset-0 bg-gradient-to-t from-cyan-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
-                    <div class="p-4">
-                        <h3 class="text-sm text-gray-700 mb-2">{{this.name}}</h3>
-                        <p class="text-base font-semibold text-gray-900">{{this.price}}</p>
+                    <div class="p-6">
+                        <h3 class="text-base font-semibold text-gray-800 mb-2 group-hover:text-cyan-700 transition-colors">{{this.name}}</h3>
+                        <p class="text-xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">{{this.price}}</p>
                     </div>
                 </a>
                 {{/each}}
@@ -290,31 +384,31 @@
 
             <!-- View All Button -->
             <div class="text-center">
-                <a href="/shop" class="inline-block bg-gray-800 text-white px-8 py-3 rounded-full hover:bg-gray-700 transition-colors duration-300">
-                    View all
+                <a href="#products" class="inline-block bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-10 py-4 rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                    View All Products
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section class="py-16 bg-white">
+    <!-- Features / Highlights Section -->
+    <section id="exhibits" class="py-20 bg-white">
         <div class="container mx-auto px-4">
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-gray-50 p-6 rounded-lg text-center">
-                    <div class="text-4xl mb-4">🐠</div>
-                    <h3 class="text-xl font-semibold mb-2">Premium Aquarium Life</h3>
-                    <p class="text-gray-600">Healthy, vibrant fish and plants from trusted suppliers around the world.</p>
+            <div class="grid md:grid-cols-3 gap-10">
+                <div class="bg-gradient-to-br from-cyan-50 to-blue-50 p-8 rounded-2xl text-center hover:shadow-xl transition-shadow duration-300">
+                    <div class="text-6xl mb-6">🐠</div>
+                    <h3 class="text-2xl font-bold mb-4 text-cyan-800">Premium Aquatic Life</h3>
+                    <p class="text-gray-700 leading-relaxed">Healthy, vibrant plants and fish from trusted suppliers. Each specimen carefully selected for quality and vitality.</p>
                 </div>
-                <div class="bg-gray-50 p-6 rounded-lg text-center">
-                    <div class="text-4xl mb-4">🔧</div>
-                    <h3 class="text-xl font-semibold mb-2">Expert Setup</h3>
-                    <p class="text-gray-600">Professional aquarium installation and maintenance services by our expert team.</p>
+                <div class="bg-gradient-to-br from-teal-50 to-cyan-50 p-8 rounded-2xl text-center hover:shadow-xl transition-shadow duration-300">
+                    <div class="text-6xl mb-6">🔧</div>
+                    <h3 class="text-2xl font-bold mb-4 text-teal-800">Expert Guidance</h3>
+                    <p class="text-gray-700 leading-relaxed">Professional consultation and maintenance services. Our team helps you create and maintain the perfect aquatic environment.</p>
                 </div>
-                <div class="bg-gray-50 p-6 rounded-lg text-center">
-                    <div class="text-4xl mb-4">🏆</div>
-                    <h3 class="text-xl font-semibold mb-2">5-Year Warranty</h3>
-                    <p class="text-gray-600">Peace of mind with our industry-leading warranty on custom tanks.</p>
+                <div class="bg-gradient-to-br from-blue-50 to-cyan-50 p-8 rounded-2xl text-center hover:shadow-xl transition-shadow duration-300">
+                    <div class="text-6xl mb-6">🏆</div>
+                    <h3 class="text-2xl font-bold mb-4 text-blue-800">Quality Guarantee</h3>
+                    <p class="text-gray-700 leading-relaxed">Industry-leading warranty on all equipment. Your satisfaction and success are our top priorities.</p>
                 </div>
             </div>
         </div>
@@ -322,60 +416,83 @@
 
 
     <!-- CTA Section -->
-    <section class="py-20 bg-gradient-to-r from-teal-600 to-blue-500 text-white">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl font-bold mb-6">Need Help With Your Aquarium?</h2>
-            <p class="text-xl mb-8 max-w-2xl mx-auto">Our team of experts is here to help you create and maintain the perfect aquatic environment.</p>
-            <div class="space-x-4">
-                <a href="/contact" class="bg-white text-blue-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition duration-300">
-                    Contact Us
+    <section id="contact" class="py-24 bg-gradient-to-br from-cyan-600 via-blue-600 to-teal-600 text-white relative overflow-hidden">
+        <!-- Decorative Bubbles -->
+        <div class="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+        <div class="absolute bottom-10 right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+        
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6">Ready to Dive In?</h2>
+            <p class="text-xl md:text-2xl mb-10 max-w-3xl mx-auto leading-relaxed">Our team of aquatic specialists is here to help you create and maintain the perfect underwater ecosystem. Let's bring your aquarium dreams to life!</p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#products" class="bg-white text-cyan-700 px-10 py-4 rounded-full font-bold hover:bg-cyan-50 hover:scale-105 transition-all duration-300 shadow-xl">
+                    Shop Now
                 </a>
-                <a href="tel:+6561234567" class="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:bg-opacity-10 transition duration-300">
-                    Call Now
+                <a href="tel:+6561234567" class="border-2 border-white text-white px-10 py-4 rounded-full font-bold hover:bg-white hover:text-cyan-700 transition-all duration-300">
+                    Contact Us
                 </a>
             </div>
         </div>
     </section>
 
+    <!-- Wave Divider Before Footer -->
+    <div class="relative bg-white">
+        <svg class="wave-svg w-full h-24" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0.67,0,0,321.39,56.44Z" fill="#0A2540" opacity="1"></path>
+        </svg>
+    </div>
+
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-12">
+    <footer class="bg-gradient-to-b from-slate-900 to-cyan-950 text-white py-16">
         <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
                 <div>
-                    <h3 class="text-xl font-bold mb-4">Aquatic Avenue</h3>
-                    <p class="text-gray-400">Singapore's premier aquarium specialist for all your aquatic needs.</p>
+                    <h3 class="text-2xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Aquatic Avenue</h3>
+                    <p class="text-cyan-200 leading-relaxed">Singapore's premier aquarium specialist. Dive into wonder with us.</p>
                 </div>
                 <div>
-                    <h4 class="font-semibold mb-4">Quick Links</h4>
-                    <ul class="space-y-2">
-                        <li><a href="/shop" class="text-gray-400 hover:text-white">Shop</a></li>
-                        <li><a href="/portfolio" class="text-gray-400 hover:text-white">Portfolio</a></li>
-                        <li><a href="/services" class="text-gray-400 hover:text-white">Services</a></li>
-                        <li><a href="/about" class="text-gray-400 hover:text-white">About Us</a></li>
+                    <h4 class="font-bold mb-4 text-cyan-300">Quick Links</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#products" class="text-cyan-100 hover:text-cyan-300 transition-colors">Shop</a></li>
+                        <li><a href="#exhibits" class="text-cyan-100 hover:text-cyan-300 transition-colors">Exhibits</a></li>
+                        <li><a href="#about" class="text-cyan-100 hover:text-cyan-300 transition-colors">About Us</a></li>
+                        <li><a href="#contact" class="text-cyan-100 hover:text-cyan-300 transition-colors">Contact</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-semibold mb-4">Contact</h4>
-                    <ul class="space-y-2 text-gray-400">
-                        <li>123 Aqua Street</li>
+                    <h4 class="font-bold mb-4 text-cyan-300">Visit Us</h4>
+                    <ul class="space-y-3 text-cyan-100">
+                        <li>📍 123 Aqua Street</li>
                         <li>Singapore 123456</li>
-                        <li>+65 6123 4567</li>
-                        <li>hello@aquaticavenue.com</li>
+                        <li>📞 +65 6123 4567</li>
+                        <li>✉️ hello@aquaticavenue.com</li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-semibold mb-4">Follow Us</h4>
+                    <h4 class="font-bold mb-4 text-cyan-300">Follow Our Journey</h4>
                     <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white">FB</a>
-                        <a href="#" class="text-gray-400 hover:text-white">IG</a>
-                        <a href="#" class="text-gray-400 hover:text-white">YT</a>
+                        <a href="#" class="w-10 h-10 bg-cyan-700 hover:bg-cyan-600 rounded-full flex items-center justify-center transition-colors">FB</a>
+                        <a href="#" class="w-10 h-10 bg-cyan-700 hover:bg-cyan-600 rounded-full flex items-center justify-center transition-colors">IG</a>
+                        <a href="#" class="w-10 h-10 bg-cyan-700 hover:bg-cyan-600 rounded-full flex items-center justify-center transition-colors">YT</a>
                     </div>
                 </div>
             </div>
-            <div class="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400">
-                <p>&copy; 2025 Aquatic Avenue. All rights reserved.</p>
+            <div class="border-t border-cyan-800 mt-12 pt-8 text-center text-cyan-300">
+                <p>&copy; 2025 Aquatic Avenue. All rights reserved. | Crafted with 💙 for aquarium enthusiasts</p>
             </div>
         </div>
     </footer>
+    
+    <!-- Scroll to Top Navigation Script -->
+    <script>
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('mainNav');
+            if (window.scrollY > 100) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+    </script>
 </body>
 </html>
