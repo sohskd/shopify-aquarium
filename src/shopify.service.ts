@@ -12,11 +12,13 @@ interface CartItem {
 @Injectable()
 export class ShopifyService {
   private readonly storefrontAccessToken = process.env.SHOPIFY_STOREFRONT_TOKEN || '';
+  private readonly adminAccessToken = process.env.SHOPIFY_ADMIN_TOKEN || '';
   private readonly shopDomain = process.env.SHOPIFY_SHOP_DOMAIN || '';
 
   constructor() {
     console.log('[Shopify] Environment check:', {
       hasToken: !!this.storefrontAccessToken,
+      hasAdminToken: !!this.adminAccessToken,
       hasDomain: !!this.shopDomain,
       domain: this.shopDomain || 'NOT SET',
       tokenLength: this.storefrontAccessToken?.length || 0
@@ -153,89 +155,64 @@ export class ShopifyService {
     };
   }
 
-  async createCheckout(cartItems: CartItem[]): Promise<string> {
-    // Fallback if not configured
-    if (!this.storefrontAccessToken || !this.shopDomain) {
-      console.warn('[Shopify] Missing credentials. Returning cart fallback.');
-      return '/cart';
+  // Create a draft order in Shopify (for PayNow payments)
+  async createDraftOrder(items: CartItem[], customerInfo: any) {
+    if (!this.adminAccessToken) {
+      console.error('[Shopify] Admin API token not configured');
+      return null;
     }
-
-    // Filter only items that have a mapped Shopify variant id
-    const lines = (cartItems || [])
-      .filter((i) => !!i.shopifyVariantId && i.quantity > 0)
-      .map((i) => ({
-        merchandiseId: `gid://shopify/ProductVariant/${i.shopifyVariantId}`,
-        quantity: i.quantity,
-      }));
-
-    if (!lines.length) {
-      console.warn('[Shopify] No items with shopifyVariantId found in cart.');
-      return '/cart';
-    }
-
-    // Use the newer cartCreate mutation (checkoutCreate is deprecated)
-    const query = `
-      mutation cartCreate($input: CartInput!) {
-        cartCreate(input: $input) {
-          cart {
-            id
-            checkoutUrl
-          }
-          userErrors {
-            field
-            message
-          }
-        }
-      }
-    `;
-
-    // Get the base URL from environment or use localhost for development
-    const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
-    
-    const variables = { 
-      input: { 
-        lines: lines,
-        buyerIdentity: {
-          countryCode: 'SG'
-        },
-        attributes: [
-          {
-            key: '_return_url',
-            value: `${baseUrl}/payment/success`
-          }
-        ]
-      } 
-    };
 
     try {
-      const res = await fetch(`https://${this.shopDomain}/api/2024-01/graphql.json`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Shopify-Storefront-Access-Token': this.storefrontAccessToken,
-        },
-        body: JSON.stringify({ query, variables }),
-      });
+      const lineItems = items.map(item => ({
+        variant_id: item.shopifyVariantId,
+        quantity: item.quantity,
+      }));
 
-      const json = await res.json();
-      
-      // Check for errors
-      if (json?.data?.cartCreate?.userErrors?.length > 0) {
-        console.error('[Shopify] cartCreate userErrors:', json.data.cartCreate.userErrors);
-        return '/cart';
-      }
-      
-      const checkoutUrl = json?.data?.cartCreate?.cart?.checkoutUrl;
-      if (checkoutUrl) {
-        console.log('[Shopify] Cart created successfully, redirecting to:', checkoutUrl);
-        return checkoutUrl;
-      }
+      const draftOrder = {
+        draft_order: {
+          line_items: lineItems,
+          customer: {
+            email: customerInfo.email || 'customer@example.com',
+            first_name: customerInfo.firstName || 'Customer',
+            last_name: customerInfo.lastName || '',
+          },
+          note: `PayNow Payment - Reference: ${customerInfo.reference || 'N/A'}`,
+          tags: 'paynow, pending-payment',
+          email: customerInfo.email || 'customer@example.com',
+        }
+      };
 
-      console.error('[Shopify] cartCreate error:', json?.errors || json);
-      return '/cart';
-    } catch (err) {
-      console.error('[Shopify] Network/API error:', err);
-      return '/cart';
+      console.log('[Shopify] Creating draft order:', JSON.stringify(draftOrder, null, 2));
+
+      const response = await fetch(
+        `https://${this.shopDomain}/admin/api/2024-01/draft_orders.json`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Shopify-Access-Token': this.adminAccessToken,
+          },
+          body: JSON.stringify(draftOrder),
+        }
+      );
+
+      const result = await response.json();
+      
+      if (response.ok && result.draft_order) {
+        console.log('[Shopify] Draft order created:', result.draft_order.id);
+        return {
+          success: true,
+          orderId: result.draft_order.id,
+          orderNumber: result.draft_order.name,
+          invoiceUrl: result.draft_order.invoice_url,
+        };
+      } else {
+        console.error('[Shopify] Failed to create draft order:', result);
+        return { success: false, error: result.errors || 'Unknown error' };
+      }
+    } catch (error) {
+      console.error('[Shopify] Error creating draft order:', error);
+      return { success: false, error: error.message };
     }
   }
 }

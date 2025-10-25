@@ -75,12 +75,6 @@ export class AppController {
     return {};
   }
 
-  @Post('api/checkout')
-  async createCheckout(@Body() body: { items: any[] }) {
-    const checkoutUrl = await this.shopifyService.createCheckout(body.items);
-    return { checkoutUrl };
-  }
-
   @Get('checkout/payment')
   @Render('payment-selection')
   getPaymentSelection() {
@@ -121,6 +115,39 @@ export class AppController {
       amount: amount.toFixed(2),
       reference,
     };
+  }
+
+  @Post('api/paynow-order')
+  async createPayNowOrder(@Body() body: any) {
+    try {
+      const { items, customerInfo } = body;
+      
+      console.log('[PayNow Order] Creating draft order:', { items, customerInfo });
+      
+      const result = await this.shopifyService.createDraftOrder(items, customerInfo);
+      
+      if (result && result.success) {
+        return {
+          success: true,
+          message: 'Order created in Shopify',
+          orderId: result.orderId,
+          orderNumber: result.orderNumber,
+        };
+      } else {
+        return {
+          success: false,
+          message: 'Failed to create order in Shopify',
+          error: result?.error,
+        };
+      }
+    } catch (error) {
+      console.error('[PayNow Order] Error:', error);
+      return {
+        success: false,
+        message: 'Internal server error',
+        error: error.message,
+      };
+    }
   }
 
   @Get('payment/success')

@@ -140,13 +140,64 @@
         const CART_KEY = 'aa_cart';
         const reference = '{{reference}}';
 
-        function confirmPayment() {
-            // Clear cart
-            localStorage.removeItem(CART_KEY);
-            
-            // Show confirmation message
-            if (confirm('Have you completed the PayNow transfer?\n\nWe will verify your payment within 24 hours and send you a confirmation email.')) {
-                // Redirect to success page
+        async function confirmPayment() {
+            if (!confirm('Have you completed the PayNow transfer?\n\nWe will verify your payment within 24 hours and send you a confirmation email.')) {
+                return;
+            }
+
+            // Show loading state
+            const button = event.target;
+            button.disabled = true;
+            button.innerHTML = '<span class="pulse">Creating order...</span>';
+
+            try {
+                // Get cart items
+                const cartItems = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+                
+                if (cartItems.length === 0) {
+                    alert('Cart is empty');
+                    button.disabled = false;
+                    button.innerHTML = "I've Completed Payment";
+                    return;
+                }
+
+                // Send order to Shopify
+                const response = await fetch('/api/paynow-order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        items: cartItems,
+                        customerInfo: {
+                            reference: reference,
+                            email: 'customer@example.com', // You can add a form to collect this
+                            firstName: 'PayNow',
+                            lastName: 'Customer',
+                        }
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    console.log('[PayNow] Order created in Shopify:', result.orderNumber);
+                    // Clear cart
+                    localStorage.removeItem(CART_KEY);
+                    // Redirect to success page
+                    window.location.href = `/payment/success?ref=${reference}`;
+                } else {
+                    console.error('[PayNow] Failed to create order:', result.error);
+                    alert('Order created locally, but failed to sync with Shopify. Please contact support with reference: ' + reference);
+                    // Still clear cart and redirect
+                    localStorage.removeItem(CART_KEY);
+                    window.location.href = `/payment/success?ref=${reference}`;
+                }
+            } catch (error) {
+                console.error('[PayNow] Error:', error);
+                alert('An error occurred. Please contact support with reference: ' + reference);
+                // Still clear cart and redirect
+                localStorage.removeItem(CART_KEY);
                 window.location.href = `/payment/success?ref=${reference}`;
             }
         }
