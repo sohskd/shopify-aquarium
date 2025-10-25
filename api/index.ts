@@ -38,6 +38,25 @@ async function bootstrap() {
     helpers: {
       startsWith: function(str: string, prefix: string) {
         return str && str.startsWith(prefix);
+      },
+      eq: function(a: any, b: any) {
+        return a === b;
+      },
+      gt: function(a: number, b: number) {
+        return a > b;
+      },
+      subtract: function(a: number, b: number) {
+        return a - b;
+      },
+      add: function(a: number, b: number) {
+        return a + b;
+      },
+      range: function(start: number, end: number) {
+        const result: number[] = [];
+        for (let i = start; i <= end; i++) {
+          result.push(i);
+        }
+        return result;
       }
     }
   });
