@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
+    
+    <!-- Preload critical images -->
+    <link rel="preload" as="image" href="/images/image1.jpg">
+    <link rel="preload" as="image" href="/images/image2.jpg">
+    <link rel="preload" as="image" href="/images/image3.jpg">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -22,21 +28,36 @@
             font-family: 'Poppins', sans-serif;
         }
         
-        /* Floating Bubbles Animation */
+        /* Floating Bubbles Animation - Optimized */
         @keyframes float {
-            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.4; }
-            50% { transform: translateY(-20px) translateX(10px); opacity: 0.8; }
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+            50% { transform: translateY(-15px) translateX(8px); opacity: 0.6; }
         }
         .bubble {
             position: absolute;
             border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(14,165,233,0.3));
-            animation: float 6s ease-in-out infinite;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.6), rgba(14,165,233,0.2));
+            animation: float 8s ease-in-out infinite;
+            will-change: transform, opacity;
         }
-        .bubble:nth-child(1) { width: 80px; height: 80px; left: 10%; top: 20%; animation-delay: 0s; }
-        .bubble:nth-child(2) { width: 60px; height: 60px; left: 70%; top: 40%; animation-delay: 2s; }
-        .bubble:nth-child(3) { width: 100px; height: 100px; left: 40%; top: 60%; animation-delay: 4s; }
-        .bubble:nth-child(4) { width: 50px; height: 50px; left: 85%; top: 70%; animation-delay: 1s; }
+        .bubble:nth-child(1) { width: 60px; height: 60px; left: 10%; top: 20%; animation-delay: 0s; }
+        .bubble:nth-child(2) { width: 50px; height: 50px; left: 70%; top: 40%; animation-delay: 2s; }
+        .bubble:nth-child(3) { width: 70px; height: 70px; left: 40%; top: 60%; animation-delay: 4s; display: none; }
+        .bubble:nth-child(4) { width: 40px; height: 40px; left: 85%; top: 70%; animation-delay: 1s; display: none; }
+        
+        @media (min-width: 768px) {
+            .bubble:nth-child(3), .bubble:nth-child(4) { display: block; }
+        }
+        
+        /* Carousel Loading State */
+        .carousel-slide {
+            background-size: cover;
+            background-position: center;
+            will-change: opacity;
+        }
+        .carousel-loading {
+            background: linear-gradient(135deg, #0c4a6e 0%, #0891b2 100%);
+        }
         
         /* Wave Animation */
         @keyframes wave {
@@ -62,10 +83,26 @@
         /* Product Card Hover */
         .product-card {
             transition: all 0.3s ease;
+            will-change: transform;
         }
         .product-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 20px 40px rgba(14, 165, 233, 0.3);
+        }
+        
+        /* Performance Optimizations */
+        img {
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+        
+        /* Reduce motion for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
 </head>
@@ -221,6 +258,13 @@
     </div>
 
     <script>
+        // Preload carousel images for smooth transitions
+        const carouselImages = ['/images/image1.jpg', '/images/image2.jpg', '/images/image3.jpg'];
+        carouselImages.forEach(src => {
+            const img = new Image();
+            img.src = src;
+        });
+
         // Carousel functionality
         let currentSlide = 0;
         let isPlaying = true;
@@ -235,9 +279,15 @@
             else if (index < 0) currentSlide = totalSlides - 1;
             else currentSlide = index;
 
-            // Update slides
+            // Update slides with GPU acceleration
             slides.forEach((slide, i) => {
-                slide.style.opacity = i === currentSlide ? '1' : '0';
+                if (i === currentSlide) {
+                    slide.style.opacity = '1';
+                    slide.style.zIndex = '10';
+                } else {
+                    slide.style.opacity = '0';
+                    slide.style.zIndex = '1';
+                }
             });
 
             // Update dots
@@ -365,9 +415,9 @@
                     <div class="aspect-square bg-gradient-to-br from-cyan-100 to-blue-100 flex items-center justify-center overflow-hidden relative">
                         {{#if this.image}}
                             {{#if (startsWith this.image "http")}}
-                                <img src="{{this.image}}" alt="{{this.name}}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                <img src="{{this.image}}&width=400" alt="{{this.name}}" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             {{else}}
-                                <img src="/images/{{this.image}}" alt="{{this.name}}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                <img src="/images/{{this.image}}" alt="{{this.name}}" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             {{/if}}
                         {{else}}
                             <span class="text-cyan-400">🌿 No Image</span>

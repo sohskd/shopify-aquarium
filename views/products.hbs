@@ -103,7 +103,7 @@
                         <div class="product-card bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer" onclick="window.location.href='/product/{{this.id}}'">
                             <!-- Product Image -->
                             <div class="relative h-64 bg-gradient-to-br from-cyan-100 to-blue-100 overflow-hidden">
-                                <img src="{{this.image}}" alt="{{this.name}}" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500" onerror="this.src='/images/image1.jpg'">
+                                <img src="{{this.image}}&width=500" alt="{{this.name}}" loading="lazy" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500" onerror="this.src='/images/image1.jpg'">
                                 {{#unless this.availableForSale}}
                                     <div class="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
                                         Out of Stock

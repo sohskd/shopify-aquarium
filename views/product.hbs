@@ -94,7 +94,7 @@
                         </button>
                         {{#if product.image}}
                             {{#if (startsWith product.image "http")}}
-                                <img src="{{product.image}}" alt="{{product.name}}" class="w-full h-auto rounded-lg">
+                                <img src="{{product.image}}&width=800" alt="{{product.name}}" class="w-full h-auto rounded-lg">
                             {{else}}
                                 <img src="/images/{{product.image}}" alt="{{product.name}}" class="w-full h-auto rounded-lg">
                             {{/if}}

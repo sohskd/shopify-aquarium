@@ -101,9 +101,9 @@
         subtotal += numericPrice * item.quantity;
         const row = document.createElement('div');
         row.className = 'bg-white rounded-lg p-4 shadow-sm flex items-center gap-4';
-        const imageSrc = item.image && item.image.startsWith('http') ? item.image : `/images/${item.image}`;
+        const imageSrc = item.image && item.image.startsWith('http') ? `${item.image}&width=200` : `/images/${item.image}`;
         row.innerHTML = `
-          <img src="${imageSrc}" class="w-20 h-20 object-cover rounded" alt="${item.name}">
+          <img src="${imageSrc}" loading="lazy" class="w-20 h-20 object-cover rounded" alt="${item.name}">
           <div class="flex-1">
             <p class="text-sm text-gray-900">${item.name}</p>
             <p class="text-sm text-gray-600">${typeof item.price === 'string' ? item.price : formatPrice(item.price)}</p>
